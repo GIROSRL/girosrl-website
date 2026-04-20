@@ -27,12 +27,12 @@ export function ProjectPreviewCard({ project }: Props) {
     )
   }
 
-  // Fallback SVG locale quando thum.io tarda o fallisce, o quando il progetto
-  // non ha un dominio pubblico (es. Sicilery, Helme, Virauto).
+  // Screenshot reali (JPG, catturati via scripts/capture-previews.mjs) o
+  // fallback SVG locale quando il progetto non ha un dominio pubblico (es. Helmè, Virauto).
   const fallbackMap: Record<string, string> = {
-    siciliaclassica: "/images/projects/siciliaclassica-preview.svg",
-    "south-unconventional": "/images/projects/south-unconventional-preview.svg",
-    sicilery: "/images/projects/sicilery-preview.svg",
+    siciliaclassica: "/images/projects/siciliaclassica-preview.jpg",
+    "south-unconventional": "/images/projects/south-unconventional-preview.jpg",
+    sicilery: "/images/projects/sicilery-preview.jpg",
     helme: "/images/projects/helme-preview.svg",
     virauto: "/images/projects/virauto-preview.svg",
   }

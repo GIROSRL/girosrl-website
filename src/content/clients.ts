@@ -49,9 +49,9 @@ export const featuredClients: Client[] = [
   },
   {
     slug: "helme",
-    name: "Helme",
+    name: "Helmè",
     logo: "/logos/helme.png",
-    alt: "Helme",
+    alt: "Helmè",
     width: 180,
   },
 ]

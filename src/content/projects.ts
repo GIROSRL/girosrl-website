@@ -90,8 +90,8 @@ export const projects: Project[] = [
   {
     id: "helme",
     type: "image",
-    title: "Helme",
-    client: "Helme",
+    title: "Helmè",
+    client: "Helmè",
     tagline: "Content editoriale e social management per uno store luxury lifestyle",
     areaSlug: "marketing",
     image: "/images/projects/helme-preview.svg",

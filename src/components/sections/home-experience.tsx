@@ -251,14 +251,19 @@ export function HomeExperience() {
 
       isAnimating = true
       lenis.scrollTo(targetScroll, {
-        // Breve, snap: quickly to the point and unlock so next wheel e' ricevuto
-        duration: 0.55,
-        // easeInOutQuart — forte all'inizio/fine, sensazione di "scatto"
-        easing: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2),
+        // Transizione volutamente LENTA: l'utente percepisce un passaggio deliberato.
+        // Durante i 1.8s isAnimating blocca ulteriori wheel → serve riscrollare dopo.
+        duration: 1.8,
+        // easeInOutCubic — graduale, non scattante
+        easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
         lock: true,
         force: true,
         onComplete: () => {
-          isAnimating = false
+          // Cooldown di 250ms — non accetta altri wheel immediatamente dopo lo snap:
+          // cosi' un gesto di trackpad con inertia residua non salta un secondo step.
+          setTimeout(() => {
+            isAnimating = false
+          }, 250)
         },
       })
     }
@@ -268,10 +273,10 @@ export function HomeExperience() {
       observer = Observer.create({
         target: window,
         type: "wheel,touch",
-        // Tolerance 5 = molto sensibile al wheel (trackpad Mac smooth inertia)
-        tolerance: 5,
-        // Soglia per touch (swipe) separata — 30px per evitare micro-touch
-        dragMinimum: 25,
+        // Tolerance 25 = serve un wheel/swipe "deciso" per contare come step.
+        // Cosi' il tap piano / coda di inertia del trackpad non fa scattare uno step.
+        tolerance: 25,
+        dragMinimum: 40,
         preventDefault: true,
         // onDown = utente scrolla in giu' (wheel forward / swipe up) → avanti
         // onUp = utente scrolla in su (wheel back / swipe down) → indietro

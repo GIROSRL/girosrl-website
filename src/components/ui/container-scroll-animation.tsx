@@ -11,10 +11,12 @@ import { cn } from "@/lib/utils"
 
 // ─── Client tab data ──────────────────────────────────────────────────────────
 
+// Screenshot reali catturati via scripts/capture-previews.mjs (Playwright)
+// Re-run per aggiornare: `node scripts/capture-previews.mjs`
 const FALLBACKS: Record<string, string> = {
-  siciliaclassica: "/images/projects/siciliaclassica-preview.svg",
-  "south-unconventional": "/images/projects/south-unconventional-preview.svg",
-  sicilery: "/images/projects/sicilery-preview.svg",
+  siciliaclassica: "/images/projects/siciliaclassica-preview.jpg",
+  "south-unconventional": "/images/projects/south-unconventional-preview.jpg",
+  sicilery: "/images/projects/sicilery-preview.jpg",
 }
 
 // NB: thum.io aveva problemi (cookie banner, loading indicator, dimensioni non-ottimizzate,

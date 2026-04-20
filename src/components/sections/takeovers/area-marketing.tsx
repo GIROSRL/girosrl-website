@@ -98,8 +98,8 @@ function CampaignDashboard() {
       </div>
 
       <div className="p-3 grid grid-cols-3 gap-3">
-        {/* Instagram Ad Preview */}
-        <InstagramAdPreview />
+        {/* Helme Instagram feed — social management live */}
+        <HelmeInstagramFeed />
         {/* Google Ad Preview */}
         <GoogleAdPreview />
         {/* Performance KPI */}
@@ -122,84 +122,112 @@ function CampaignDashboard() {
   )
 }
 
-function InstagramAdPreview() {
+/**
+ * Helmè Instagram feed mock — profilo + grid editoriale.
+ * Il cliente Helmè e\u0300 un store luxury lifestyle per cui GIRO gestisce
+ * contenuti editoriali e social management. Questo pannello mostra il
+ * risultato "live": profilo con stats + 2x3 grid di post editoriali.
+ */
+function HelmeInstagramFeed() {
+  // 6 post mock con gradient/aesthetic "luxury moody": ogni tile ha un accento
+  const posts = [
+    { bg: "linear-gradient(135deg, #1a0d08 0%, #3a2014 100%)", label: "AW24", sub: "Capsule" },
+    { bg: "linear-gradient(135deg, #c8a070 0%, #8a6040 100%)", label: "Editorial", sub: "" },
+    { bg: "linear-gradient(135deg, #2a1a0f 0%, #4a3020 100%)", label: "Mood", sub: "" },
+    { bg: "linear-gradient(135deg, #8a6040 0%, #3a2014 100%)", label: "Lookbook", sub: "" },
+    { bg: "linear-gradient(135deg, #4a2a18 0%, #c8a070 100%)", label: "Drop 03", sub: "Sold out" },
+    { bg: "linear-gradient(135deg, #1a0d08 0%, #c8832a 100%)", label: "Preview", sub: "New" },
+  ]
   return (
     <div
-      className="rounded-lg overflow-hidden border"
+      className="rounded-lg overflow-hidden border flex flex-col"
       style={{
         borderColor: "rgba(255,255,255,0.12)",
         background: "#0a0e1a",
       }}
     >
-      {/* IG header */}
-      <div className="flex items-center gap-2 px-2 py-1.5 border-b border-white/10">
+      {/* Profile header */}
+      <div className="flex items-center gap-2 px-2 py-2 border-b border-white/10">
         <div
-          className="w-4 h-4 rounded-full"
+          className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-[10px]"
           style={{
             background:
-              "conic-gradient(from 0deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #f09433)",
+              "conic-gradient(from 140deg, #f09433, #bc1888, #cc2366, #e6683c, #f09433)",
+            color: "#fff",
+            boxShadow: "inset 0 0 0 2px #0a0e1a",
           }}
-        />
-        <span className="text-[9px] font-semibold text-white">giro.srl</span>
-        <span className="ml-auto text-[8px] text-white/50">Sponsorizzato</span>
+          aria-hidden
+        >
+          H
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="text-[10px] font-semibold text-white truncate">
+            @helme.store
+          </div>
+          <div className="text-[7px] text-white/50 truncate">
+            Luxury lifestyle · Catania
+          </div>
+        </div>
+        <div className="px-1.5 py-0.5 rounded text-[7px] font-bold text-white" style={{ background: "#fbbf24", color: "#0d1424" }}>
+          SEGUI
+        </div>
       </div>
-      {/* IG image with overlay */}
-      <div
-        className="aspect-square relative overflow-hidden flex items-center justify-center"
-        style={{
-          background:
-            "linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ec4899 100%)",
-        }}
-      >
-        <div className="text-center p-2">
+
+      {/* Stats strip */}
+      <div className="grid grid-cols-3 text-center border-b border-white/10 py-1.5">
+        <div>
+          <div className="text-[9px] font-bold text-white leading-none">58</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">Post</div>
+        </div>
+        <div>
+          <div className="text-[9px] font-bold text-white leading-none">1.2k</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">Follower</div>
+        </div>
+        <div>
+          <div className="text-[9px] font-bold text-white leading-none">+18%</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">30d</div>
+        </div>
+      </div>
+
+      {/* Grid 2x3 di post */}
+      <div className="grid grid-cols-3 gap-px bg-white/5 flex-1">
+        {posts.map((post, i) => (
           <div
-            className="font-display font-bold leading-tight mb-1"
-            style={{
-              fontSize: "11px",
-              color: "#0d1424",
-              textShadow: "0 1px 2px rgba(255,255,255,0.3)",
-            }}
+            key={i}
+            className="aspect-square relative overflow-hidden flex items-end p-1"
+            style={{ background: post.bg }}
           >
-            Trasforma
-            <br />
-            il tuo business
+            <div className="relative">
+              <div
+                className="font-display font-bold leading-none text-white"
+                style={{
+                  fontSize: "8px",
+                  textShadow: "0 1px 2px rgba(0,0,0,0.6)",
+                }}
+              >
+                {post.label}
+              </div>
+              {post.sub && (
+                <div
+                  className="text-[6px] uppercase tracking-widest text-white/80 mt-0.5"
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.6)" }}
+                >
+                  {post.sub}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-[7px] uppercase tracking-widest text-[#4a1a0a]">
-            Scopri come
-          </div>
-        </div>
-        {/* Corner CTA */}
-        <div className="absolute bottom-1 right-1 px-1.5 py-0.5 bg-white rounded text-[7px] font-bold text-[#0d1424]">
-          SCOPRI
-        </div>
+        ))}
       </div>
-      {/* IG actions */}
-      <div className="px-2 py-1.5 flex items-center gap-2">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M12 21s-7-4.5-7-10a4 4 0 017-2.8A4 4 0 0119 11c0 5.5-7 10-7 10z"
-            stroke="#ffffff"
-            strokeWidth="1.8"
-          />
-        </svg>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M21 12a8.5 8.5 0 01-12.8 7.4L3 21l1.6-5.2A8.5 8.5 0 1121 12z"
-            stroke="#ffffff"
-            strokeWidth="1.8"
-          />
-        </svg>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-          <path
-            d="M22 2L15 22l-3-9-9-3 19-8z"
-            stroke="#ffffff"
-            strokeWidth="1.8"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className="ml-auto text-[8px] text-white/60">2.4k</span>
+
+      {/* Footer: engagement rate */}
+      <div className="px-2 py-1.5 border-t border-white/10 flex items-center gap-2">
+        <span className="text-[7px] uppercase tracking-widest text-[#fbbf24] font-semibold">
+          Engagement
+        </span>
+        <span className="ml-auto text-[8px] font-bold text-white">6.2%</span>
+        <span className="text-[7px] font-semibold" style={{ color: "#34d399" }}>+2.1pt</span>
       </div>
-      <div className="px-2 pb-2 text-[8px] text-white/50 font-mono">CTR 3.8%</div>
     </div>
   )
 }
