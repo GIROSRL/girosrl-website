@@ -17,8 +17,11 @@ const FALLBACKS: Record<string, string> = {
   sicilery: "/images/projects/sicilery-preview.svg",
 }
 
+// wait/5/ dà 5s al sito di finire il boot + dismiss lazy loading spinner
+// noanimate disattiva CSS animations. NB: thum.io non può chiudere i cookie banner
+// automaticamente; se un sito mostra un banner persistente la fallback SVG locale resta l'opzione.
 const screenshotOf = (url: string) =>
-  `https://image.thum.io/get/width/1440/noanimate/fullpage/${url}`
+  `https://image.thum.io/get/width/1440/wait/5/noanimate/fullpage/${url}`
 
 export type ClientTab = {
   id: string

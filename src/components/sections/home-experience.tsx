@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react"
 import dynamic from "next/dynamic"
 import { motion, AnimatePresence, useMotionValue } from "framer-motion"
-import { gsap } from "@/lib/gsap"
+import { gsap, ScrollTrigger, Observer } from "@/lib/gsap"
+import { useLenis } from "@/providers/lenis-provider"
 import { Container } from "@/components/common/container"
 import { GiroButton } from "@/components/common/giro-button"
 import { Magnetic } from "@/components/common/magnetic"
@@ -63,6 +64,7 @@ export function HomeExperience() {
   const reducedMotion = useReducedMotion()
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
   const sviluppoMotionProgress = useMotionValue(0)
+  const lenis = useLenis()
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024)
@@ -112,10 +114,10 @@ export function HomeExperience() {
         const cellIdx = Math.floor(relative / takeoverCell)
         if (cellIdx >= 0 && cellIdx < serviceAreas.length) {
           const within = relative - cellIdx * takeoverCell
-          // All'inizio (primi 3.5% del cell) zoom-in: non mostrare ancora content
-          // Alla fine (ultimi 3.5% del cell) zoom-out: fade out
-          if (within < 0.035) return { vis: "none", areaIdx: -1 }
-          if (within > takeoverCell - 0.035) return { vis: "none", areaIdx: -1 }
+          // Finestra visibile ampia: fade-in/out solo nei primi/ultimi 1.5% del cell
+          // — cosi' il contenuto resta visibile anche se lo snap non atterra esatto
+          if (within < 0.015) return { vis: "none", areaIdx: -1 }
+          if (within > takeoverCell - 0.015) return { vis: "none", areaIdx: -1 }
           return { vis: "area", areaIdx: cellIdx }
         }
         return { vis: "none", areaIdx: -1 }
@@ -123,6 +125,7 @@ export function HomeExperience() {
 
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: "home-exp",
           trigger: section,
           start: "top top",
           end: "+=900%",
@@ -131,12 +134,7 @@ export function HomeExperience() {
           pinType: "transform",
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          snap: {
-            snapTo: [0, 0.09, 0.13, 0.24, 0.38, 0.43, 0.48, 0.52, 0.66, 0.80, 0.94, 1.0],
-            duration: { min: 0.2, max: 0.5 },
-            delay: 0.15,
-            ease: "power2.inOut",
-          },
+          // Niente snap nativo: sotto c'è un Observer che blocca lo scroll a step
           onUpdate: (self) => {
             const p = self.progress
 
@@ -156,9 +154,9 @@ export function HomeExperience() {
               if (cellIdx >= 0 && cellIdx < serviceAreas.length) {
                 const within = relative - cellIdx * takeoverCell
                 activeIdx = cellIdx
-                if (within < 0.035) takeover = within / 0.035
-                else if (within > takeoverCell - 0.035)
-                  takeover = (takeoverCell - within) / 0.035
+                if (within < 0.015) takeover = within / 0.015
+                else if (within > takeoverCell - 0.015)
+                  takeover = (takeoverCell - within) / 0.015
                 else takeover = 1
                 takeover = Math.max(0, Math.min(1, takeover))
 
@@ -195,6 +193,102 @@ export function HomeExperience() {
 
     return () => ctx.revert()
   }, [isDesktop, reducedMotion])
+
+  /**
+   * SCROLL A STEP — Observer intercetta ogni wheel/touch e fa scrollTo allo snap
+   * successivo (o precedente). Niente "salto di piu' sezioni con uno scroll".
+   * Snap points al CENTRO visibile di ogni area (non ai bordi dove la fade e' a 0).
+   */
+  useEffect(() => {
+    if (!isDesktop || reducedMotion || !lenis || !sectionRef.current) return
+
+    // Centri visibili: hero, manifesto, Strategia, Sviluppo×3 tab, Intelligenza, Brand, Persone, outro
+    const SNAP_POINTS = [0, 0.17, 0.30, 0.405, 0.455, 0.492, 0.59, 0.73, 0.87, 0.97]
+    const EPSILON = 0.002
+    let isAnimating = false
+    let observer: Observer | undefined
+
+    const killObserver = () => {
+      observer?.kill()
+      observer = undefined
+    }
+
+    const advance = (dir: 1 | -1) => {
+      if (isAnimating) return
+      const st = ScrollTrigger.getById("home-exp")
+      if (!st) return
+
+      const currentProgress = st.progress
+
+      // Trova prossimo snap nella direzione di scroll (mai skippa: sempre quello adiacente)
+      let targetIdx = -1
+      if (dir > 0) {
+        for (let i = 0; i < SNAP_POINTS.length; i++) {
+          if (SNAP_POINTS[i]! > currentProgress + EPSILON) {
+            targetIdx = i
+            break
+          }
+        }
+      } else {
+        for (let i = SNAP_POINTS.length - 1; i >= 0; i--) {
+          if (SNAP_POINTS[i]! < currentProgress - EPSILON) {
+            targetIdx = i
+            break
+          }
+        }
+      }
+
+      // Oltre i confini — esci dal pin e lascia scrollare normalmente
+      if (targetIdx === -1) {
+        killObserver()
+        const exit = dir > 0 ? st.end + 200 : Math.max(0, st.start - 200)
+        lenis.scrollTo(exit, { duration: 0.4, lock: true })
+        return
+      }
+
+      const targetProgress = SNAP_POINTS[targetIdx]!
+      const targetScroll = st.start + (st.end - st.start) * targetProgress
+
+      isAnimating = true
+      lenis.scrollTo(targetScroll, {
+        duration: 0.75,
+        easing: (t: number) => 1 - Math.pow(1 - t, 3),
+        lock: true,
+        onComplete: () => {
+          isAnimating = false
+        },
+      })
+    }
+
+    const createObserver = () => {
+      if (observer) return
+      observer = Observer.create({
+        target: window,
+        type: "wheel,touch",
+        tolerance: 10,
+        preventDefault: true,
+        // onDown = utente vuole scrollare in giu' (wheel forward / swipe up) → avanti
+        // onUp = utente vuole scrollare in su (wheel back / swipe down) → indietro
+        onDown: () => advance(1),
+        onUp: () => advance(-1),
+      })
+    }
+
+    const gate = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: "top top",
+      end: "bottom bottom",
+      onEnter: createObserver,
+      onEnterBack: createObserver,
+      onLeave: killObserver,
+      onLeaveBack: killObserver,
+    })
+
+    return () => {
+      killObserver()
+      gate.kill()
+    }
+  }, [isDesktop, reducedMotion, lenis])
 
   /* ═══ Fallback ═══ */
 
