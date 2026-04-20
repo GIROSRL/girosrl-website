@@ -22,7 +22,7 @@ export type Project = {
  * Screenshot preview dinamico via thum.io (gratis, cachato lato servizio).
  */
 const screenshotOf = (url: string) =>
-  `https://image.thum.io/get/width/1440/crop/900/noanimate/${url}`
+  `https://image.thum.io/get/width/1440/noanimate/fullpage/${url}`
 
 export const projects: Project[] = [
   // ── SVILUPPO ───────────────────────────────────────────────
@@ -57,7 +57,8 @@ export const projects: Project[] = [
     client: "Sicilery",
     tagline: "Brand identity + sito + packaging per prodotti siciliani",
     areaSlug: "sviluppo",
-    image: "/images/projects/sicilery-preview.svg",
+    url: "https://www.sicilery.com",
+    image: screenshotOf("https://www.sicilery.com"),
     tags: ["Brand", "Sito web", "Packaging"],
     accent: "#14d6b4",
   },
@@ -91,10 +92,10 @@ export const projects: Project[] = [
     type: "image",
     title: "Helme",
     client: "Helme",
-    tagline: "Gestione social + realizzazione contenuti",
+    tagline: "Content editoriale e social management per uno store luxury lifestyle",
     areaSlug: "marketing",
     image: "/images/projects/helme-preview.svg",
-    tags: ["Social management", "Content", "Foto & video"],
+    tags: ["Social management", "Contenuti editoriali", "Luxury lifestyle"],
     accent: "#fbbf24",
   },
 ]

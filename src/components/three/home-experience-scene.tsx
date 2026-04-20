@@ -54,11 +54,11 @@ export function HomeExperienceScene(props: HomeExperienceRefs) {
 
       <EffectComposer multisampling={0}>
         <Bloom
-          intensity={1.0}
-          luminanceThreshold={0.22}
+          intensity={0.85}
+          luminanceThreshold={0.28}
           luminanceSmoothing={0.9}
           mipmapBlur
-          kernelSize={KernelSize.LARGE}
+          kernelSize={KernelSize.MEDIUM}
         />
       </EffectComposer>
     </Canvas>

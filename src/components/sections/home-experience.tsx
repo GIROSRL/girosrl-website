@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import dynamic from "next/dynamic"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue } from "framer-motion"
 import { gsap } from "@/lib/gsap"
 import { Container } from "@/components/common/container"
 import { GiroButton } from "@/components/common/giro-button"
@@ -12,6 +12,7 @@ import { serviceAreas } from "@/content/services"
 import { projects } from "@/content/projects"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { AreaTakeover } from "./takeovers"
+import { ContainerScroll } from "@/components/ui/container-scroll-animation"
 
 const HomeExperienceScene = dynamic(
   () =>
@@ -61,6 +62,7 @@ export function HomeExperience() {
   const [visibleAreaIdx, setVisibleAreaIdx] = useState<number>(-1)
   const reducedMotion = useReducedMotion()
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
+  const sviluppoMotionProgress = useMotionValue(0)
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024)
@@ -119,7 +121,6 @@ export function HomeExperience() {
         return { vis: "none", areaIdx: -1 }
       }
 
-      // Timeline lineare — scrub continuo, niente snap (più affidabile + user keeps control)
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -130,10 +131,16 @@ export function HomeExperience() {
           pinType: "transform",
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          snap: {
+            snapTo: [0, 0.09, 0.13, 0.24, 0.38, 0.43, 0.48, 0.52, 0.66, 0.80, 0.94, 1.0],
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.15,
+            ease: "power2.inOut",
+          },
           onUpdate: (self) => {
             const p = self.progress
 
-            // CORE ZOOM — peak plateau 0.13-0.21 (manifesto window), snap 0.16
+            // CORE ZOOM — peak plateau 0.13-0.21 (manifesto window)
             let coreZoom = 0
             if (p >= 0.09 && p < 0.13) coreZoom = (p - 0.09) / 0.04
             else if (p >= 0.13 && p < 0.21) coreZoom = 1
@@ -161,9 +168,15 @@ export function HomeExperience() {
                   .toString(16)
                   .padStart(2, "0")
                 overlay.style.backgroundColor = `${area.color}${alpha}`
+
+                // Sub-progress for Sviluppo (cellIdx 1) — drives ContainerScroll
+                if (cellIdx === 1) {
+                  sviluppoMotionProgress.set(Math.max(0, Math.min(1, within / takeoverCell)))
+                }
               }
             } else {
               overlay.style.backgroundColor = "transparent"
+              sviluppoMotionProgress.set(0)
             }
             takeoverRef.current.value = takeover
             activeIdxRef.current.value = activeIdx
@@ -239,6 +252,7 @@ export function HomeExperience() {
               <AreaTakeover
                 key={serviceAreas[visibleAreaIdx].slug}
                 slug={serviceAreas[visibleAreaIdx].slug}
+                motionProgress={visibleAreaIdx === 1 ? sviluppoMotionProgress : undefined}
               />
             )}
           </AnimatePresence>
@@ -521,13 +535,15 @@ function HomeExperienceFallback() {
                   <p className="text-sm leading-relaxed text-[var(--color-gray-mid)] mb-4">
                     {area.description}
                   </p>
-                  {areaProjects.length > 0 && (
+                  {area.slug === "sviluppo" ? (
+                    <ContainerScroll />
+                  ) : areaProjects.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                       {areaProjects.map((p) => (
                         <ProjectPreviewCard key={p.id} project={p} />
                       ))}
                     </div>
-                  )}
+                  ) : null}
                 </div>
               )
             })}

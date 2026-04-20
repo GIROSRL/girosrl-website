@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, createContext, useContext } from "react"
 import Lenis from "lenis"
+import { gsap } from "@/lib/gsap"
 import { ScrollTrigger } from "@/lib/gsap"
 
 const LenisContext = createContext<Lenis | null>(null)
@@ -11,7 +12,6 @@ export function useLenis() {
 }
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
-  // State (no ref access in render) — il lenis è disponibile ai consumer via context
   const [lenis, setLenis] = useState<Lenis | null>(null)
   const lenisRef = useRef<Lenis | null>(null)
 
@@ -22,21 +22,22 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       smoothWheel: true,
     })
     lenisRef.current = instance
-    // Inizializzazione di external library — setState legittimo per esporre
-    // l'istanza via context ai consumer. Non è una cascata di render (unico setState).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLenis(instance)
 
     // Sincronizzazione Lenis ↔ GSAP ScrollTrigger
     instance.on("scroll", ScrollTrigger.update)
 
-    function raf(time: number) {
-      instance.raf(time)
-      requestAnimationFrame(raf)
+    // Usa GSAP ticker invece di RAF standalone — un solo loop condiviso,
+    // nessun doppio calcolo, cleanup corretto via gsap.ticker.remove
+    gsap.ticker.lagSmoothing(0)
+    const tickFn = (time: number) => {
+      instance.raf(time * 1000)
     }
-    requestAnimationFrame(raf)
+    gsap.ticker.add(tickFn)
 
     return () => {
+      gsap.ticker.remove(tickFn)
       instance.destroy()
       lenisRef.current = null
       setLenis(null)
