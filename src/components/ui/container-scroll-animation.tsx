@@ -101,7 +101,7 @@ export function ContainerScroll({
     setActiveTab(idx)
   }
 
-  const scaleDimensions = () => (isMobile ? ([0.7, 0.9] as const) : ([1.05, 1] as const))
+  const scaleDimensions = (): [number, number] => (isMobile ? [0.7, 0.9] : [1.05, 1])
 
   // Use external MotionValue when inside GSAP pin; otherwise fall back to useScroll
   const progress = motionProgress ?? scrollYProgress
