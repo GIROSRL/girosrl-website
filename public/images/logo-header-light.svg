@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="60" viewBox="0 0 220 60" role="img" aria-label="GI.R.O. SRL">
+  <!-- Symbol centered at 30,30 scaled to 60px height -->
+  <g transform="translate(30, 30)">
+    <circle cx="0" cy="0" r="26" fill="none" stroke="#b8cfe8" stroke-width="0.7" stroke-dasharray="3 2.5"/>
+    <circle cx="0" cy="0" r="18" fill="none" stroke="#3a8fe8" stroke-width="1.2"/>
+    <circle cx="0" cy="0" r="10" fill="none" stroke="#a0bcd8" stroke-width="0.6"/>
+    <circle cx="0" cy="0" r="5.5" fill="#1a5faa"/>
+    <circle cx="18" cy="-18" r="3" fill="#3a8fe8"/>
+    <line x1="4" y1="-4" x2="15" y2="-15" stroke="#3a8fe8" stroke-width="0.7" stroke-dasharray="2 2"/>
+    <path d="M -26 0 A 26 26 0 0 1 0 -26" fill="none" stroke="#1a5faa" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="70" y="26" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="24" font-weight="200" letter-spacing="7" fill="#080d1a">GIRO</text>
+  <text x="71" y="40" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="7" font-weight="300" letter-spacing="4" fill="#1a5faa">SRL</text>
+  <line x1="70" y1="46" x2="218" y2="46" stroke="#1a5faa" stroke-width="0.8" stroke-linecap="round"/>
+</svg>

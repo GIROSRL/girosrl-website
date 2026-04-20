@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "siteName": "GI.R.O. SRL",
+    "siteDescription": "Un solo partner per la tua trasformazione digitale. Consulenza, sviluppo web, AI e automazione, marketing.",
+    "siteUrl": "https://girosrl.com"
+  },
+  "nav": {
+    "services": "Servizi",
+    "about": "Chi siamo",
+    "caseStudies": "Case studies",
+    "blog": "Blog",
+    "contacts": "Contatti",
+    "bookCall": "Prenota una call"
+  },
+  "home": {
+    "heroHeadline": "Un solo partner.",
+    "heroHeadline2": "Infinite direzioni.",
+    "heroSubtitle": "Al centro del tuo progetto, in ogni fase.",
+    "heroCtaPrimary": "Scopri come lavoriamo",
+    "heroCtaSecondary": "Prenota una call gratuita"
+  },
+  "footer": {
+    "tagline": "Al centro del tuo progetto, in ogni fase.",
+    "vatLabel": "P.IVA",
+    "vatNumber": "07266000872",
+    "address": "Viale Ulisse 22, Catania",
+    "copyright": "© {year} GI.R.O. SRL. Tutti i diritti riservati.",
+    "linksServices": "Servizi",
+    "linksCompany": "Azienda",
+    "linksResources": "Risorse"
+  },
+  "common": {
+    "learnMore": "Scopri di più",
+    "seeAll": "Vedi tutti",
+    "readMore": "Leggi l'articolo",
+    "bookCall": "Prenota una call",
+    "contactUs": "Contattaci",
+    "back": "Indietro",
+    "close": "Chiudi"
+  }
+}

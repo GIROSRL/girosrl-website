@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <linearGradient id="bg-virauto" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0e18"/>
+      <stop offset="100%" stop-color="#050810"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg-virauto)"/>
+  <!-- Ford-ish blue accent (non-branded) -->
+  <rect x="80" y="80" width="200" height="40" rx="6" fill="#003478"/>
+  <text x="180" y="106" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="2" fill="#ffffff">VIRAUTO CATANIA</text>
+
+  <text x="80" y="220" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="500" letter-spacing="4" fill="#fbbf24">CONCESSIONARIO FORD · 8+ ANNI INSIEME</text>
+  <text x="80" y="340" font-family="Georgia, serif" font-size="88" font-weight="900" fill="#ffffff">La nostra storia</text>
+  <text x="80" y="420" font-family="Georgia, serif" font-size="88" font-weight="900" font-style="italic" fill="#fbbf24">più lunga.</text>
+
+  <!-- Cards KPI -->
+  <rect x="80" y="500" width="400" height="160" rx="12" fill="#0f172e" stroke="#1a2a4a" stroke-width="1"/>
+  <text x="100" y="540" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#8a9ab5" letter-spacing="2">DAL 2017</text>
+  <text x="100" y="600" font-family="Georgia, serif" font-size="64" font-weight="900" fill="#fbbf24">8+</text>
+  <text x="100" y="640" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#c8d4e8">anni di gestione marketing</text>
+
+  <rect x="510" y="500" width="400" height="160" rx="12" fill="#0f172e" stroke="#1a2a4a" stroke-width="1"/>
+  <text x="530" y="540" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#8a9ab5" letter-spacing="2">SCOPE</text>
+  <text x="530" y="590" font-family="Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#ffffff">Meta + Google Ads</text>
+  <text x="530" y="615" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#c8d4e8">Gestione lead · Web app AI</text>
+  <text x="530" y="640" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#c8d4e8">Analisi documenti legge 104</text>
+
+  <rect x="940" y="500" width="420" height="160" rx="12" fill="#0f172e" stroke="#1a2a4a" stroke-width="1"/>
+  <text x="960" y="540" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#8a9ab5" letter-spacing="2">KPI PRINCIPALE</text>
+  <text x="960" y="600" font-family="Georgia, serif" font-size="48" font-weight="900" fill="#fbbf24">Lead qualificati</text>
+  <text x="960" y="640" font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#c8d4e8">mensili, costo per lead misurato</text>
+
+  <text x="80" y="860" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#3a4a6a" letter-spacing="3">VIRAUTO · GESTIONE MARKETING + AI CON GIRO</text>
+</svg>

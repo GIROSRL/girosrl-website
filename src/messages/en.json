@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "siteName": "GI.R.O. SRL",
+    "siteDescription": "One partner for your entire digital transformation. Consulting, web development, AI & automation, marketing.",
+    "siteUrl": "https://girosrl.com"
+  },
+  "nav": {
+    "services": "Services",
+    "about": "About us",
+    "caseStudies": "Case studies",
+    "blog": "Blog",
+    "contacts": "Contact",
+    "bookCall": "Book a call"
+  },
+  "home": {
+    "heroHeadline": "One partner.",
+    "heroHeadline2": "Infinite directions.",
+    "heroSubtitle": "At the center of your project, at every stage.",
+    "heroCtaPrimary": "See how we work",
+    "heroCtaSecondary": "Book a free call"
+  },
+  "footer": {
+    "tagline": "At the center of your project, at every stage.",
+    "vatLabel": "VAT",
+    "vatNumber": "07266000872",
+    "address": "Viale Ulisse 22, Catania, Italy",
+    "copyright": "© {year} GI.R.O. SRL. All rights reserved.",
+    "linksServices": "Services",
+    "linksCompany": "Company",
+    "linksResources": "Resources"
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "seeAll": "See all",
+    "readMore": "Read article",
+    "bookCall": "Book a call",
+    "contactUs": "Contact us",
+    "back": "Back",
+    "close": "Close"
+  }
+}

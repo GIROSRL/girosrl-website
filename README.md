@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GI.R.O. SRL — Sito istituzionale
 
-## Getting Started
+> Un solo partner. Infinite direzioni.
+> Sito marketing di [GI.R.O. SRL](https://girosrl.com), partner per la trasformazione digitale di PMI italiane.
 
-First, run the development server:
+## Stack
+
+- **Framework:** [Next.js 16](https://nextjs.org) (App Router · React 19 · TypeScript strict · Turbopack)
+- **Styling:** Tailwind CSS v4 · shadcn/ui
+- **3D:** React Three Fiber + Drei (home hero)
+- **Animazioni:** GSAP ScrollTrigger · Lenis · Framer Motion
+- **Email:** [Resend](https://resend.com) (form `/contatti`)
+- **Particles:** tsparticles slim (dynamic import, reduced-motion aware)
+- **Hosting:** Vercel
+- **Fonts:** Playfair Display (display) · Inter (UI/body) via `next/font`
+
+## Sviluppo locale
 
 ```bash
+npm install
+cp .env.example .env.local   # compila i valori reali
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apri [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Struttura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                       Route App Router (tutte statiche/SSG)
+│   ├── (home)                 /
+│   ├── chi-siamo/             /chi-siamo
+│   ├── servizi/               /servizi + /servizi/[slug] (5 aree)
+│   ├── percorsi/              /percorsi + /percorsi/[slug] (3 percorsi)
+│   ├── contatti/              /contatti (form Resend)
+│   ├── privacy/ cookie/       Legal placeholders
+│   └── design-system/         QA interno (no index)
+├── components/
+│   ├── sections/              Sezioni high-level (home-experience, vision-mission, client-logos…)
+│   ├── three/                 Scena R3F
+│   ├── layout/                Header · Footer · MobileNav
+│   ├── common/                Container · Typography · GiroButton · AnimatedHeadline · AuroraBackground…
+│   └── ui/                    shadcn + GlowCard · Sparkles…
+├── content/                   Dati statici (services, paths, projects, clients)
+├── hooks/ · lib/ · providers/
+└── types/
+```
 
-## Learn More
+Documentazione estesa in [`docs/`](./docs):
 
-To learn more about Next.js, take a look at the following resources:
+- [`PLAN.md`](./docs/PLAN.md) — roadmap e storia del progetto
+- [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — scelte architetturali
+- [`DESIGN_BRIEF.md`](./docs/DESIGN_BRIEF.md) — brief cliente + identity
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Comando | Cosa fa |
+|---------|---------|
+| `npm run dev` | Dev server con Turbopack (porta 3000) |
+| `npm run build` | Build di produzione |
+| `npm run start` | Serve la build |
+| `npm run lint` | ESLint |
+| `npx tsc --noEmit` | Type-check |
 
-## Deploy on Vercel
+## Variabili d'ambiente
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Vedi [`.env.example`](./.env.example). Su Vercel vanno configurate come
+Environment Variables (Project → Settings → Environment Variables).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Obbligatorie in produzione:**
+
+- `RESEND_API_KEY` — chiave API Resend (il form contatti la richiede per inviare)
+- `RESEND_FROM_EMAIL` · `CONTACT_FORM_TO_EMAIL` — default `info@girosrl.com`
+- `NEXT_PUBLIC_SITE_URL` — `https://girosrl.com`
+
+> Nota: se `RESEND_API_KEY` manca, il form `/contatti` risponde "ok" ma NON invia email (logga un warning). Utile in preview/staging.
+
+## Deploy
+
+Push su `main` → Vercel pubblica in automatico.
+
+1. Connetti il repo GitHub a Vercel
+2. Imposta le Environment Variables
+3. Configura il dominio custom `girosrl.com`
+4. Su Squarespace DNS punta i record A/CNAME a Vercel (istruzioni fornite dalla dashboard Vercel)
+
+## Licenza
+
+Codice proprietario · © GI.R.O. SRL — P.IVA 07266000872

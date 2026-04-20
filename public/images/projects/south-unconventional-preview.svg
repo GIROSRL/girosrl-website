@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0a12"/>
+      <stop offset="100%" stop-color="#1a1423"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff4d6d"/>
+      <stop offset="100%" stop-color="#ff7e5f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="900" fill="url(#bg)"/>
+  <!-- Top nav -->
+  <text x="70" y="70" font-family="Helvetica, Arial, sans-serif" font-size="22" font-weight="900" letter-spacing="6" fill="#ffffff">SHOUT</text>
+  <g font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#9aa" letter-spacing="2">
+    <text x="1080" y="70">WORK</text>
+    <text x="1160" y="70">STUDIO</text>
+    <text x="1250" y="70">PROCESS</text>
+    <text x="1350" y="70">CONTACT</text>
+  </g>
+  <!-- Hero headline -->
+  <text x="70" y="380" font-family="Georgia, serif" font-size="140" font-weight="900" fill="#ffffff">Un</text>
+  <text x="70" y="520" font-family="Georgia, serif" font-size="140" font-weight="900" font-style="italic" fill="url(#accent)">conventional</text>
+  <text x="70" y="660" font-family="Georgia, serif" font-size="140" font-weight="900" fill="#ffffff">stories.</text>
+  <!-- Subtitle -->
+  <text x="72" y="720" font-family="Helvetica, Arial, sans-serif" font-size="18" fill="#c8c8d8" letter-spacing="1">Brand identity &amp; creative direction for unconventional brands.</text>
+  <!-- CTA -->
+  <rect x="70" y="770" width="220" height="54" rx="27" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  <text x="180" y="803" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="500" fill="#ffffff" letter-spacing="2">DISCOVER OUR WORK</text>
+  <!-- Decorative circle -->
+  <circle cx="1200" cy="450" r="280" fill="none" stroke="url(#accent)" stroke-width="1" opacity="0.4"/>
+  <circle cx="1200" cy="450" r="200" fill="none" stroke="url(#accent)" stroke-width="1" opacity="0.3"/>
+  <circle cx="1200" cy="450" r="60" fill="url(#accent)" opacity="0.85"/>
+  <!-- Footer tag -->
+  <text x="70" y="870" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#666" letter-spacing="3">SHOUTUNCONVENTIANL.COM — BRAND STUDIO</text>
+</svg>
