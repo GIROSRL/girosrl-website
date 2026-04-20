@@ -251,9 +251,12 @@ export function HomeExperience() {
 
       isAnimating = true
       lenis.scrollTo(targetScroll, {
-        duration: 0.75,
-        easing: (t: number) => 1 - Math.pow(1 - t, 3),
+        // Breve, snap: quickly to the point and unlock so next wheel e' ricevuto
+        duration: 0.55,
+        // easeInOutQuart — forte all'inizio/fine, sensazione di "scatto"
+        easing: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - Math.pow(-2 * t + 2, 4) / 2),
         lock: true,
+        force: true,
         onComplete: () => {
           isAnimating = false
         },
@@ -265,10 +268,13 @@ export function HomeExperience() {
       observer = Observer.create({
         target: window,
         type: "wheel,touch",
-        tolerance: 10,
+        // Tolerance 5 = molto sensibile al wheel (trackpad Mac smooth inertia)
+        tolerance: 5,
+        // Soglia per touch (swipe) separata — 30px per evitare micro-touch
+        dragMinimum: 25,
         preventDefault: true,
-        // onDown = utente vuole scrollare in giu' (wheel forward / swipe up) → avanti
-        // onUp = utente vuole scrollare in su (wheel back / swipe down) → indietro
+        // onDown = utente scrolla in giu' (wheel forward / swipe up) → avanti
+        // onUp = utente scrolla in su (wheel back / swipe down) → indietro
         onDown: () => advance(1),
         onUp: () => advance(-1),
       })

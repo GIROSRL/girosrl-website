@@ -1,8 +1,58 @@
 "use client"
 
-import React, { useEffect, useRef, type ReactNode, type CSSProperties } from "react"
+import React, { useEffect, type ReactNode, type CSSProperties } from "react"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { cn } from "@/lib/utils"
+
+/**
+ * SINGLE global pointermove listener condiviso da TUTTE le GlowCard.
+ * Scrive --x/--y/--xp/--yp su document.documentElement: tutte le card
+ * (che usano background-attachment: fixed) ereditano gli stessi valori.
+ * Prima: N card = N listener + N style writes per frame. Ora: 1 listener + 1 write.
+ */
+let globalGlowListenerInstalled = false
+let globalGlowRefCount = 0
+let globalCleanup: (() => void) | null = null
+
+function ensureGlobalGlowListener() {
+  if (typeof window === "undefined") return
+  if (globalGlowListenerInstalled) {
+    globalGlowRefCount++
+    return
+  }
+  globalGlowListenerInstalled = true
+  globalGlowRefCount = 1
+
+  const root = document.documentElement
+  let rafId = 0
+  let pending: PointerEvent | null = null
+  const apply = () => {
+    rafId = 0
+    if (!pending) return
+    const e = pending
+    pending = null
+    root.style.setProperty("--glow-x", e.clientX.toFixed(2))
+    root.style.setProperty("--glow-xp", (e.clientX / window.innerWidth).toFixed(3))
+    root.style.setProperty("--glow-y", e.clientY.toFixed(2))
+    root.style.setProperty("--glow-yp", (e.clientY / window.innerHeight).toFixed(3))
+  }
+  const sync = (e: PointerEvent) => {
+    pending = e
+    if (!rafId) rafId = requestAnimationFrame(apply)
+  }
+  document.addEventListener("pointermove", sync, { passive: true })
+  globalCleanup = () => {
+    document.removeEventListener("pointermove", sync)
+    if (rafId) cancelAnimationFrame(rafId)
+    globalGlowListenerInstalled = false
+    globalCleanup = null
+  }
+}
+
+function releaseGlobalGlowListener() {
+  globalGlowRefCount = Math.max(0, globalGlowRefCount - 1)
+  if (globalGlowRefCount === 0 && globalCleanup) globalCleanup()
+}
 
 type GlowColorPreset = "blue" | "purple" | "green" | "red" | "orange"
 
@@ -66,34 +116,13 @@ export function GlowCard({
   customSize = false,
   style,
 }: GlowCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null)
   const prefersReducedMotion = useReducedMotion()
 
+  // Single shared listener — tutte le card leggono --glow-x/--glow-y dal root.
   useEffect(() => {
     if (prefersReducedMotion) return
-    const el = cardRef.current
-    if (!el) return
-    let rafId = 0
-    let pending: PointerEvent | null = null
-    const apply = () => {
-      rafId = 0
-      if (!pending) return
-      const e = pending
-      pending = null
-      el.style.setProperty("--x", e.clientX.toFixed(2))
-      el.style.setProperty("--xp", (e.clientX / window.innerWidth).toFixed(3))
-      el.style.setProperty("--y", e.clientY.toFixed(2))
-      el.style.setProperty("--yp", (e.clientY / window.innerHeight).toFixed(3))
-    }
-    const sync = (e: PointerEvent) => {
-      pending = e
-      if (!rafId) rafId = requestAnimationFrame(apply)
-    }
-    document.addEventListener("pointermove", sync, { passive: true })
-    return () => {
-      document.removeEventListener("pointermove", sync)
-      if (rafId) cancelAnimationFrame(rafId)
-    }
+    ensureGlobalGlowListener()
+    return () => releaseGlobalGlowListener()
   }, [prefersReducedMotion])
 
   const preset = glowColorMap[glowColor]
@@ -117,8 +146,8 @@ export function GlowCard({
     "--lightness": String(lightness),
     "--border-size": "calc(var(--border, 1.5) * 1px)",
     "--spotlight-size": "calc(var(--size, 220) * 1px)",
-    "--hue": "calc(var(--base) + (var(--xp, 0) * var(--spread, 0)))",
-    backgroundImage: `radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 90) * 1%) calc(var(--lightness, 62) * 1%) / var(--bg-spot-opacity, 0.12)), transparent)`,
+    "--hue": "calc(var(--base) + (var(--glow-xp, 0) * var(--spread, 0)))",
+    backgroundImage: `radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--glow-x, 0) * 1px) calc(var(--glow-y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 90) * 1%) calc(var(--lightness, 62) * 1%) / var(--bg-spot-opacity, 0.12)), transparent)`,
     backgroundSize:
       "calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))",
     backgroundPosition: "50% 50%",
@@ -135,67 +164,14 @@ export function GlowCard({
       : {}),
   }
 
-  // Stili borderlight :before/:after tramite un singolo <style> scoped via data attribute
-  const cssRules = `
-    [data-giro-glow]::before,
-    [data-giro-glow]::after {
-      pointer-events: none;
-      content: "";
-      position: absolute;
-      inset: calc(var(--border-size) * -1);
-      border: var(--border-size) solid transparent;
-      border-radius: calc(var(--radius) * 1px);
-      background-attachment: fixed;
-      background-size: calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)));
-      background-repeat: no-repeat;
-      background-position: 50% 50%;
-      mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-      -webkit-mask: linear-gradient(transparent, transparent), linear-gradient(white, white);
-      mask-clip: padding-box, border-box;
-      -webkit-mask-clip: padding-box, border-box;
-      mask-composite: intersect;
-      -webkit-mask-composite: source-in;
-    }
-    [data-giro-glow]::before {
-      background-image: radial-gradient(
-        calc(var(--spotlight-size) * 0.7) calc(var(--spotlight-size) * 0.7) at
-        calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
-        hsl(var(--hue, 210) calc(var(--saturation, 90) * 1%) calc(var(--lightness, 62) * 1%) / var(--border-spot-opacity, 1)), transparent 100%
-      );
-      filter: brightness(1.6);
-    }
-    [data-giro-glow]::after {
-      background-image: radial-gradient(
-        calc(var(--spotlight-size) * 0.4) calc(var(--spotlight-size) * 0.4) at
-        calc(var(--x, 0) * 1px) calc(var(--y, 0) * 1px),
-        hsl(0 0% 100% / var(--border-light-opacity, 0.85)), transparent 100%
-      );
-    }
-    [data-giro-glow] [data-giro-glow] {
-      position: absolute;
-      inset: 0;
-      will-change: filter;
-      opacity: var(--outer, 1);
-      border-radius: calc(var(--radius) * 1px);
-      filter: blur(calc(var(--border-size) * 4));
-      background: none;
-      pointer-events: none;
-      border: none;
-    }
-  `
-
   return (
-    <>
-      <style dangerouslySetInnerHTML={{ __html: cssRules }} />
-      <div
-        ref={cardRef}
-        data-giro-glow
-        style={inlineStyles as CSSProperties}
-        className={cn(sizeClass, aspect, "relative", className)}
-      >
-        <div data-giro-glow aria-hidden />
-        {children}
-      </div>
-    </>
+    <div
+      data-giro-glow
+      style={inlineStyles as CSSProperties}
+      className={cn(sizeClass, aspect, "relative", className)}
+    >
+      <div data-giro-glow aria-hidden />
+      {children}
+    </div>
   )
 }

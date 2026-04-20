@@ -17,11 +17,12 @@ const FALLBACKS: Record<string, string> = {
   sicilery: "/images/projects/sicilery-preview.svg",
 }
 
-// wait/5/ dà 5s al sito di finire il boot + dismiss lazy loading spinner
-// noanimate disattiva CSS animations. NB: thum.io non può chiudere i cookie banner
-// automaticamente; se un sito mostra un banner persistente la fallback SVG locale resta l'opzione.
-const screenshotOf = (url: string) =>
+// NB: thum.io aveva problemi (cookie banner, loading indicator, dimensioni non-ottimizzate,
+// captures blocchi). Ora usiamo SVG mockup locali (tall 3600px per simulare scroll interno).
+// Quando si avranno screenshot puliti reali, sostituire i file in /public/images/projects/.
+const _screenshotOf = (url: string) =>
   `https://image.thum.io/get/width/1440/wait/5/noanimate/fullpage/${url}`
+void _screenshotOf
 
 export type ClientTab = {
   id: string
@@ -212,7 +213,8 @@ type SitePreviewProps = {
 
 function SitePreview({ tab, active, motionProgress, tabIndex }: SitePreviewProps) {
   const imgRef = useRef<HTMLImageElement>(null)
-  const [imgSrc, setImgSrc] = useState(tab.url ? screenshotOf(tab.url) : tab.fallback)
+  // Usiamo sempre il mockup SVG locale — rapido, zero dipendenze esterne, nessun cookie banner
+  const [imgSrc] = useState(tab.fallback)
 
   // Scroll the image based on sub-phase progress for this tab
   React.useEffect(() => {
@@ -249,7 +251,6 @@ function SitePreview({ tab, active, motionProgress, tabIndex }: SitePreviewProps
           transition: motionProgress ? undefined : "transform 0.3s ease",
         }}
         loading="lazy"
-        onError={() => setImgSrc(tab.fallback)}
         draggable={false}
       />
     </div>
