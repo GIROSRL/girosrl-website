@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           <div className="max-w-3xl space-y-6 text-sm md:text-base leading-relaxed text-[var(--color-gray-mid)]">
             <Block title="1. Titolare del trattamento">
               Il titolare del trattamento è <strong>GI.R.O. SRL</strong>, con sede
-              legale in Viale Ulisse 22, 95126 Catania, P.IVA 07266000872. Per
+              legale in Viale Ulisse 22, 95126 Catania, P.IVA 04331240871. Per
               qualsiasi richiesta: <a className="text-[var(--color-blue-light)] hover:underline" href="mailto:info@girosrl.com">info@girosrl.com</a>.
             </Block>
             <Block title="2. Dati raccolti">

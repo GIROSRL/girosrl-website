@@ -127,7 +127,7 @@ export function Footer() {
             © {year} GI.R.O. SRL — Tutti i diritti riservati
           </p>
           <p className="text-xs text-[var(--color-gray-mid)]">
-            P.IVA <span className="font-mono text-[var(--color-blue-pale)]">07266000872</span> · Catania
+            P.IVA <span className="font-mono text-[var(--color-blue-pale)]">04331240871</span> · Catania
           </p>
           <div className="flex items-center gap-4">
             <Link

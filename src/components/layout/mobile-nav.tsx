@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { createPortal } from "react-dom"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -14,6 +15,9 @@ type MobileNavProps = {
 
 export function MobileNav({ items }: MobileNavProps) {
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
     if (open) {
@@ -42,7 +46,7 @@ export function MobileNav({ items }: MobileNavProps) {
         aria-label={open ? "Chiudi menu" : "Apri menu"}
         aria-expanded={open}
         className={cn(
-          "relative z-50 flex items-center justify-center w-10 h-10",
+          "relative flex items-center justify-center w-10 h-10",
           "text-[var(--fg)] hover:text-[var(--color-blue-light)] transition-colors",
           "md:hidden"
         )}
@@ -67,67 +71,70 @@ export function MobileNav({ items }: MobileNavProps) {
         </div>
       </button>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu principale"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-40 bg-[var(--color-navy)] md:hidden"
-          >
-            <div className="flex flex-col h-full pt-24 pb-10 px-8">
-              <nav className="flex-1 flex flex-col gap-6">
-                {items.map((item, idx) => (
-                  <motion.div
-                    key={item.href}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 + idx * 0.06, duration: 0.4 }}
-                  >
-                    <Link
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className={cn(
-                        "font-display text-3xl font-semibold",
-                        "text-[var(--fg)] hover:text-[var(--color-blue)]",
-                        "transition-colors block py-1"
-                      )}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu principale"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-40 bg-[var(--color-navy)] md:hidden"
+            >
+              <div className="flex flex-col h-full pt-24 pb-10 px-8">
+                <nav className="flex-1 flex flex-col gap-6">
+                  {items.map((item, idx) => (
+                    <motion.div
+                      key={item.href}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 + idx * 0.06, duration: 0.4 }}
                     >
-                      {item.label}
-                    </Link>
-                  </motion.div>
-                ))}
-              </nav>
+                      <Link
+                        href={item.href}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          "font-display text-3xl font-semibold",
+                          "text-[var(--fg)] hover:text-[var(--color-blue)]",
+                          "transition-colors block py-1"
+                        )}
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </nav>
 
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.4 }}
-                className="mt-auto flex flex-col gap-4"
-              >
-                <GiroButton
-                  variant="primary"
-                  size="lg"
-                  href="/contatti"
-                  className="w-full justify-center"
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.4 }}
+                  className="mt-auto flex flex-col gap-4"
                 >
-                  Prenota una call
-                </GiroButton>
-                <div className="flex items-center justify-between pt-2 border-t border-[var(--color-navy-light)]">
-                  <span className="text-xs tracking-widest uppercase text-[var(--color-gray-mid)]">
-                    Lingua
-                  </span>
-                  <LanguageSwitcher />
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  <GiroButton
+                    variant="primary"
+                    size="lg"
+                    href="/contatti"
+                    className="w-full justify-center"
+                  >
+                    Prenota una call
+                  </GiroButton>
+                  <div className="flex items-center justify-between pt-2 border-t border-[var(--color-navy-light)]">
+                    <span className="text-xs tracking-widest uppercase text-[var(--color-gray-mid)]">
+                      Lingua
+                    </span>
+                    <LanguageSwitcher />
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   )
 }

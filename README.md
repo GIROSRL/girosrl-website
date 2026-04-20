@@ -87,4 +87,4 @@ Push su `main` → Vercel pubblica in automatico.
 
 ## Licenza
 
-Codice proprietario · © GI.R.O. SRL — P.IVA 07266000872
+Codice proprietario · © GI.R.O. SRL — P.IVA 04331240871
