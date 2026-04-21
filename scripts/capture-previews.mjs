@@ -5,10 +5,62 @@
 
 import { chromium } from "playwright"
 import path from "path"
+import fs from "fs/promises"
 import { fileURLToPath } from "url"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUT_DIR = path.join(__dirname, "..", "public", "images", "projects")
+const CONTENT_DIR = path.join(__dirname, "..", "src", "content")
+
+/**
+ * Estrae dati profilo Instagram dall'HTML: og:image (avatar) + og:description
+ * (followers/following/posts). Scarica l'avatar e salva stats in TS module.
+ */
+async function extractInstagramMeta(page, handle) {
+  const meta = await page.evaluate(() => {
+    const get = (name) =>
+      document.querySelector(`meta[property='${name}']`)?.getAttribute("content") ||
+      document.querySelector(`meta[name='${name}']`)?.getAttribute("content") ||
+      null
+    return {
+      ogImage: get("og:image"),
+      ogDescription: get("og:description"),
+      ogTitle: get("og:title"),
+    }
+  })
+  // og:description format: "1,234 Followers, 456 Following, 78 Posts - See Instagram..."
+  // oppure IT: "1.234 follower, 456 seguiti, 78 post - Guarda..."
+  const desc = meta.ogDescription || ""
+  // Estrae numeri in ordine: primo = followers, secondo = following, terzo = posts
+  const nums = desc.match(/([\d.,]+\s?[KkMm]?)\s*(follower|following|seguiti|seguaci|post)/gi) || []
+  const parse = (s) => {
+    const m = s.match(/([\d.,]+\s?[KkMm]?)/)
+    return m ? m[1].replace(/\s/g, "") : null
+  }
+  const followers = nums.find((s) => /follower|seguaci/i.test(s))
+  const following = nums.find((s) => /following|seguiti/i.test(s))
+  const posts = nums.find((s) => /post/i.test(s))
+
+  return {
+    handle,
+    displayName: (meta.ogTitle || "")
+      .replace(/\s*\([^)]*\)\s*•\s*.*$/i, "") // rimuove "(@handle) • ..."
+      .trim(),
+    avatarUrl: meta.ogImage,
+    followers: followers ? parse(followers) : null,
+    following: following ? parse(following) : null,
+    posts: posts ? parse(posts) : null,
+  }
+}
+
+async function downloadAvatar(url, outPath) {
+  const res = await fetch(url, {
+    headers: { "User-Agent": "Mozilla/5.0 (Macintosh) AppleWebKit/605.1.15" },
+  })
+  if (!res.ok) throw new Error(`avatar fetch ${res.status}`)
+  const buf = Buffer.from(await res.arrayBuffer())
+  await fs.writeFile(outPath, buf)
+}
 
 const SITES = [
   {
@@ -137,9 +189,42 @@ async function main() {
       const dismissed = await dismissCookies(page, site.cookieSelectors)
       console.log(`  cookie dismissed: ${dismissed}`)
 
-      // Per Instagram: il modal login copre il grid. Prova a dismissare con Escape,
-      // poi hide via CSS aggressivo di TUTTI i dialog/presentation.
+      // Per Instagram: estrai prima meta profilo (avatar + follower + post),
+      // poi dismetti il modal login per screenshot del grid.
       if (site.url.includes("instagram.com")) {
+        try {
+          const handle = site.url.match(/instagram\.com\/([^/?]+)/)?.[1] ?? "helmestore"
+          const meta = await extractInstagramMeta(page, handle)
+          console.log(`  IG meta:`, meta)
+
+          // Scarica avatar
+          if (meta.avatarUrl) {
+            const avatarPath = path.join(OUT_DIR, `${handle}-avatar.jpg`)
+            await downloadAvatar(meta.avatarUrl, avatarPath)
+            console.log(`  ✓ avatar salvato: ${avatarPath}`)
+          }
+
+          // Scrivi stats in TS module
+          const statsPath = path.join(CONTENT_DIR, "helme-instagram.ts")
+          const tsContent = `// AUTO-GENERATO da scripts/capture-previews.mjs — non modificare a mano.
+// Per aggiornare: \`node scripts/capture-previews.mjs\`.
+// Cattura del ${new Date().toISOString()}.
+
+export const helmeInstagram = {
+  handle: ${JSON.stringify(meta.handle)},
+  displayName: ${JSON.stringify(meta.displayName || "HELMÈ")},
+  avatar: ${JSON.stringify(`/images/projects/${meta.handle}-avatar.jpg`)},
+  posts: ${JSON.stringify(meta.posts || "—")},
+  followers: ${JSON.stringify(meta.followers || "—")},
+  following: ${JSON.stringify(meta.following || "—")},
+} as const
+`
+          await fs.writeFile(statsPath, tsContent, "utf8")
+          console.log(`  ✓ stats salvate: ${statsPath}`)
+        } catch (err) {
+          console.error(`  ✗ errore meta IG:`, err.message)
+        }
+
         await page.keyboard.press("Escape").catch(() => {})
         await page.waitForTimeout(300)
         await page.addStyleTag({

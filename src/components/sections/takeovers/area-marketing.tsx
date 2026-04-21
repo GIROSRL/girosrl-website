@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { Container } from "@/components/common/container"
 import { PlanetBadge } from "@/components/common/planet-badge"
 import { serviceAreas } from "@/content/services"
+import { helmeInstagram } from "@/content/helme-instagram"
 
 const area = serviceAreas.find((a) => a.slug === "marketing")!
 const easeOut = [0.22, 1, 0.36, 1] as const
@@ -137,26 +138,31 @@ function HelmeInstagramFeed() {
         background: "#0a0e1a",
       }}
     >
-      {/* Profile header */}
+      {/* Profile header — dati reali da @helmestore */}
       <div className="flex items-center gap-2 px-2 py-2 border-b border-white/10">
+        {/* Avatar reale con ring stile Instagram story */}
         <div
-          className="w-7 h-7 rounded-full flex items-center justify-center font-display font-bold text-[10px]"
+          className="relative p-[2px] rounded-full"
           style={{
             background:
               "conic-gradient(from 140deg, #f09433, #bc1888, #cc2366, #e6683c, #f09433)",
-            color: "#fff",
-            boxShadow: "inset 0 0 0 2px #0a0e1a",
           }}
-          aria-hidden
         >
-          H
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={helmeInstagram.avatar}
+            alt={`Avatar ${helmeInstagram.displayName}`}
+            className="w-7 h-7 rounded-full object-cover"
+            style={{ boxShadow: "inset 0 0 0 2px #0a0e1a" }}
+            draggable={false}
+          />
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] font-semibold text-white truncate">
-            @helmestore
+            @{helmeInstagram.handle}
           </div>
           <div className="text-[7px] text-white/50 truncate">
-            HELMÈ · Luxury lifestyle
+            {helmeInstagram.displayName} · Luxury lifestyle
           </div>
         </div>
         <div
@@ -167,24 +173,30 @@ function HelmeInstagramFeed() {
         </div>
       </div>
 
-      {/* Stats strip */}
+      {/* Stats strip — numeri reali */}
       <div className="grid grid-cols-3 text-center border-b border-white/10 py-1.5">
         <div>
-          <div className="text-[9px] font-bold text-white leading-none">58</div>
+          <div className="text-[9px] font-bold text-white leading-none">
+            {helmeInstagram.posts}
+          </div>
           <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
             Post
           </div>
         </div>
         <div>
-          <div className="text-[9px] font-bold text-white leading-none">1.2k</div>
+          <div className="text-[9px] font-bold text-white leading-none">
+            {helmeInstagram.followers}
+          </div>
           <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
             Follower
           </div>
         </div>
         <div>
-          <div className="text-[9px] font-bold text-white leading-none">+18%</div>
+          <div className="text-[9px] font-bold text-white leading-none">
+            {helmeInstagram.following}
+          </div>
           <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
-            30d
+            Seguiti
           </div>
         </div>
       </div>
