@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { Container } from "@/components/common/container"
 import { Section } from "@/components/common/section"
@@ -33,14 +33,22 @@ export function Numbers() {
 
 function NumberCard({ stat, delay }: { stat: Stat; delay: number }) {
   const ref = useRef<HTMLDivElement>(null)
+  const valueRef = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true, margin: "-100px" })
-  const [value, setValue] = useState(0)
 
+  // SEO-SAFE: SSR renderizza il VALORE REALE (stat.value). Googlebot legge
+  // il numero corretto nell'HTML server-side. L'animazione avviene SOLO
+  // dopo intersection, manipolando il textContent direttamente (bypass React
+  // re-render → zero flash). Quando la card entra in viewport, il DOM viene
+  // azzerato e ri-animato verso stat.value con easing.
   useEffect(() => {
-    if (!inView) return
-
+    if (!inView || !valueRef.current) return
+    const node = valueRef.current
+    const target = stat.value
     const startTime = performance.now()
     const duration = 1600
+
+    node.textContent = "0"
 
     let raf = 0
     const tick = (now: number) => {
@@ -50,9 +58,8 @@ function NumberCard({ stat, delay }: { stat: Stat; delay: number }) {
         return
       }
       const progress = Math.min(elapsed / duration, 1)
-      // easeOutCubic
       const eased = 1 - Math.pow(1 - progress, 3)
-      setValue(stat.value * eased)
+      node.textContent = String(Math.round(target * eased))
       if (progress < 1) raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -82,8 +89,8 @@ function NumberCard({ stat, delay }: { stat: Stat; delay: number }) {
 
       <div className="relative">
         <div className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-none">
-          <span style={{ color: "var(--color-blue)" }}>
-            {Math.round(value)}
+          <span ref={valueRef} style={{ color: "var(--color-blue)" }}>
+            {stat.value}
           </span>
           <span className="text-[var(--color-blue-light)]">{stat.suffix}</span>
         </div>

@@ -11,6 +11,10 @@ import { AnimatedHeadline } from "@/components/common/animated-headline"
 import { AuroraBackground } from "@/components/common/aurora-background"
 import { paths, getPathBySlug } from "@/content/paths"
 import { serviceAreas, getAreaBySlug } from "@/content/services"
+import {
+  JsonLdService,
+  JsonLdBreadcrumb,
+} from "@/components/common/json-ld"
 
 export function generateStaticParams() {
   return paths.map((p) => ({ slug: p.slug }))
@@ -51,25 +55,20 @@ export default async function PercorsoDettaglioPage({
   const auroraAccent = firstArea?.color ?? "#3a8fe8"
   const auroraSecondary = secondArea?.color
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: path.title,
-    description: path.description,
-    provider: {
-      "@type": "Organization",
-      name: "GI.R.O. SRL",
-      url: "https://girosrl.com",
-    },
-    serviceType: path.tagline,
-    url: `https://girosrl.com${path.href}`,
-  }
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <JsonLdService
+        name={path.title}
+        description={path.description}
+        serviceType={path.tagline}
+        path={path.href}
+      />
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Percorsi", path: "/percorsi" },
+          { name: path.title, path: path.href },
+        ]}
       />
       <main className="flex flex-col">
         <AuroraBackground

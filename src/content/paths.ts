@@ -72,9 +72,9 @@ export const paths: ServicePath[] = [
     ],
     budgetIndicativo: "da €5.000",
     durataIndicativa: "6-8 settimane",
-    metaTitle: "Percorso Parti: da zero a presenza digitale | GIRO SRL",
+    metaTitle: "Percorso Parti — Da Zero a Presenza Digitale | GI.R.O. SRL",
     metaDescription:
-      "Pacchetto completo per startup e PMI che partono: brand, sito, contenuti, strategia. 6-8 settimane, da €5k.",
+      "Stai nascendo o vuoi ricominciare? Con il percorso Parti costruiamo identità, sito e strategia iniziale. GI.R.O. SRL — Catania.",
   },
 
   {
@@ -143,9 +143,9 @@ export const paths: ServicePath[] = [
     ],
     budgetIndicativo: "da €1.500/mese",
     durataIndicativa: "minimo 6 mesi (consigliato 12)",
-    metaTitle: "Percorso Cresci: marketing misurabile per PMI | GIRO SRL",
+    metaTitle: "Percorso Cresci — Marketing e Lead Generation per PMI | GI.R.O.",
     metaDescription:
-      "Marketing + sviluppo + strategia per crescere davvero: ads, CRM, dashboard, ottimizzazione continua. Minimo 6 mesi, ROAS benchmark 4-5×.",
+      "Hai già una presenza digitale e vuoi crescere? Marketing, CRM e dati per generare lead qualificati. GI.R.O. SRL — Catania.",
   },
 
   {
@@ -214,9 +214,9 @@ export const paths: ServicePath[] = [
     ],
     budgetIndicativo: "da €15.000 (progetto pilota)",
     durataIndicativa: "3-6 mesi pilota, poi roadmap 12-24 mesi",
-    metaTitle: "Percorso Trasforma: AI e automazione per PMI | GIRO SRL",
+    metaTitle: "Percorso Trasforma — AI e Automazione Aziendale | GI.R.O. SRL",
     metaDescription:
-      "Trasformazione digitale end-to-end: AI, automazione processi, strumenti interni custom. Da €15k per un pilota, 3-6 mesi al primo ROI misurabile.",
+      "Ripensa l'intera operatività con AI, automazione e strumenti interni su misura. GI.R.O. SRL — Catania.",
   },
 ]
 

@@ -8,16 +8,17 @@ import { BreadcrumbNav } from "@/components/common/breadcrumb-nav"
 import { AnimatedHeadline } from "@/components/common/animated-headline"
 import { AuroraBackground } from "@/components/common/aurora-background"
 import { VisionMission } from "@/components/sections/vision-mission"
+import { JsonLdBreadcrumb } from "@/components/common/json-ld"
 
 export const metadata: Metadata = {
-  title: "Chi siamo — Un centro gravitazionale per il tuo digitale",
+  title: "Chi Siamo — GI.R.O. SRL | Web Agency Catania dal 2018",
   description:
-    "GI.R.O. SRL è il partner unico per la trasformazione digitale delle PMI italiane. Strategia, sviluppo, AI, brand e marketing in un'unica relazione di fiducia.",
+    "Scopri il team di GI.R.O. SRL: consulenti digitali a Catania dal 2018. Accompagniamo le PMI italiane nella trasformazione digitale con metodo e fiducia.",
   alternates: { canonical: "/chi-siamo" },
   openGraph: {
-    title: "Chi siamo — GI.R.O. SRL",
+    title: "Chi Siamo — GI.R.O. SRL | Web Agency Catania dal 2018",
     description:
-      "Un solo partner, infinite direzioni. Scopri chi siamo, cosa crediamo e come lavoriamo.",
+      "Consulenti digitali a Catania dal 2018. Accompagniamo le PMI italiane nella trasformazione digitale con metodo e fiducia.",
     url: "/chi-siamo",
     type: "website",
   },
@@ -50,6 +51,12 @@ const valori = [
 export default function ChiSiamoPage() {
   return (
     <>
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Chi siamo", path: "/chi-siamo" },
+        ]}
+      />
       <AuroraBackground accent="#3a8fe8" />
       <main className="flex flex-col">
         {/* Hero */}

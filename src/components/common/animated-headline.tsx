@@ -50,16 +50,25 @@ export function AnimatedHeadline({
     color: color ?? "var(--fg)",
   }
 
+  // Whitespace text node (nbsp) dentro ogni span tranne l'ultimo:
+  // - visivamente collassa con margin-right (inline-block) → zero impatto UI
+  // - entra nel DOM textContent → Google/screen-reader leggono "Un solo partner"
+  //   invece di "Unsolopartner"
+  // Da qui via aria-label/aria-hidden duplicati (il testo ora e\u0300 leggibile).
+  const last = words.length - 1
   return (
-    <Tag className={cn(className)} style={style} aria-label={text}>
+    <Tag className={cn(className)} style={style}>
       {words.map((word, i) => (
         <span
           key={`${word}-${i}`}
-          aria-hidden
-          className="animated-headline-word inline-block mr-[0.28em]"
-          style={{ animationDelay: `${delay + i * stagger}s` }}
+          className="animated-headline-word inline-block"
+          style={{
+            animationDelay: `${delay + i * stagger}s`,
+            marginRight: i < last ? "0.28em" : 0,
+          }}
         >
           {word}
+          {i < last ? "\u00a0" : ""}
         </span>
       ))}
     </Tag>

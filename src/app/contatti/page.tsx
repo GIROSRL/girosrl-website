@@ -6,16 +6,21 @@ import { BreadcrumbNav } from "@/components/common/breadcrumb-nav"
 import { AnimatedHeadline } from "@/components/common/animated-headline"
 import { AuroraBackground } from "@/components/common/aurora-background"
 import { CalendarBooking } from "@/components/common/calendar-booking"
+import {
+  JsonLdLocalBusiness,
+  JsonLdBreadcrumb,
+} from "@/components/common/json-ld"
 import { ContactForm } from "./contact-form"
 
 export const metadata: Metadata = {
-  title: "Contatti — Parliamone in una call",
+  title: "Contatti — Prenota una Call Gratuita | GI.R.O. SRL Catania",
   description:
-    "Scrivici o prenota una call gratuita di 30 minuti. Ti rispondiamo entro 24 ore lavorative — nessuna risposta automatica.",
+    "Prenota una call gratuita di 30 minuti con il team GI.R.O. SRL. Raccontaci il tuo progetto — Viale Ulisse 22, Catania. info@girosrl.com",
   alternates: { canonical: "/contatti" },
   openGraph: {
-    title: "Contatti — GI.R.O. SRL",
-    description: "Parlaci del tuo progetto. 30 minuti, zero slide.",
+    title: "Contatti — Prenota una Call Gratuita | GI.R.O. SRL Catania",
+    description:
+      "Prenota una call gratuita di 30 minuti. Raccontaci il tuo progetto. Viale Ulisse 22, Catania.",
     url: "/contatti",
     type: "website",
   },
@@ -24,6 +29,13 @@ export const metadata: Metadata = {
 export default function ContattiPage() {
   return (
     <>
+      <JsonLdLocalBusiness />
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Contatti", path: "/contatti" },
+        ]}
+      />
       <AuroraBackground accent="#3a8fe8" />
       <main className="flex flex-col">
         {/* Hero */}

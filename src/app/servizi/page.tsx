@@ -10,6 +10,11 @@ import { AuroraBackground } from "@/components/common/aurora-background"
 import { GlowCard } from "@/components/ui/spotlight-card"
 import { serviceAreas } from "@/content/services"
 import { paths } from "@/content/paths"
+import { serviziFaqs } from "@/content/faqs"
+import {
+  JsonLdFaqPage,
+  JsonLdBreadcrumb,
+} from "@/components/common/json-ld"
 import type { AreaSlug } from "@/types/content"
 
 /** Hue HSL approssimativo per ogni area — usato dal GlowCard per il bordo luminoso. */
@@ -22,14 +27,29 @@ const AREA_HUE: Record<AreaSlug, number> = {
 }
 
 export const metadata: Metadata = {
-  title: "Servizi — 5 aree, un solo partner",
+  title: "Servizi — Strategia, Sviluppo Web, AI, Brand, Marketing | GI.R.O.",
   description:
-    "Strategia, Sviluppo, Intelligenza AI, Brand, Marketing. Cinque direzioni che ruotano attorno al tuo progetto, con un solo interlocutore competente.",
+    "5 aree di competenza, un solo partner. Consulenza digitale, sviluppo web su misura, intelligenza artificiale, branding e marketing per PMI italiane.",
+  alternates: { canonical: "/servizi" },
+  openGraph: {
+    title: "Servizi — Strategia, Sviluppo Web, AI, Brand, Marketing | GI.R.O.",
+    description:
+      "5 aree di competenza, un solo partner. Consulenza digitale, sviluppo web, intelligenza artificiale, branding e marketing per PMI italiane.",
+    url: "/servizi",
+    type: "website",
+  },
 }
 
 export default function ServiziHubPage() {
   return (
     <main className="flex flex-col">
+      <JsonLdFaqPage items={serviziFaqs} />
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Servizi", path: "/servizi" },
+        ]}
+      />
       <AuroraBackground accent="#3a8fe8" />
       <Section size="lg">
         <Container>
@@ -43,11 +63,17 @@ export default function ServiziHubPage() {
             Aree di servizio
           </Label>
           <AnimatedHeadline
-            text="Un solo partner. Infinite direzioni."
-            fontSize={104}
+            text="Consulenza Digitale a 360°: Sviluppo Web, AI e Marketing per PMI"
+            fontSize={88}
             tag="h1"
             className="mb-4"
           />
+          <p
+            className="font-display text-2xl md:text-3xl font-semibold text-[var(--color-blue-light)] mb-5"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Un solo partner. <em className="not-italic text-[var(--fg)]">Infinite direzioni.</em>
+          </p>
           <BodyLarge className="max-w-2xl text-[var(--color-gray-mid)] mb-12">
             Ogni area è un pianeta nella tua orbita. Insieme diventano un
             sistema: un solo interlocutore per tutta la trasformazione digitale.

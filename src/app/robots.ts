@@ -16,6 +16,8 @@ export default function robots(): MetadataRoute.Robots {
         disallow: [
           "/design-system", // dev-only
           "/api/",
+          "/_next/", // build assets
+          "/admin/", // area riservata (se/quando esistera\u0300)
         ],
       },
     ],

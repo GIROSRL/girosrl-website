@@ -93,9 +93,9 @@ export const serviceAreas: ServiceArea[] = [
       },
     ],
     percorsiCollegati: ["parti", "cresci", "trasforma"],
-    metaTitle: "Consulenza strategica digital transformation PMI | GIRO SRL",
+    metaTitle: "Consulenza Strategica Digital per PMI | GI.R.O. SRL Catania",
     metaDescription:
-      "Consulenza strategica per PMI italiane: analisi processi, roadmap 6-18 mesi, KPI framework. Call conoscitiva gratuita, pochi clienti alla volta, dedizione 360°.",
+      "Consulenza strategica per la trasformazione digitale delle PMI. Roadmap, KPI, digital transformation. GI.R.O. SRL — Catania.",
   },
 
   {
@@ -186,9 +186,9 @@ export const serviceAreas: ServiceArea[] = [
       },
     ],
     percorsiCollegati: ["parti", "cresci", "trasforma"],
-    metaTitle: "Sviluppo siti web, e-commerce e dashboard | GIRO SRL Catania",
+    metaTitle: "Sviluppo Web, E-commerce e Web App su Misura | GI.R.O. SRL",
     metaDescription:
-      "Sviluppo web per PMI: siti, e-commerce, dashboard gestionali su misura. Stack moderno, codice tuo al 100%. 15 giorni per un sito standard, manutenzione inclusa.",
+      "Realizziamo siti web, e-commerce, dashboard gestionali e web app su misura. Tecnologie moderne, performance garantita. GI.R.O. SRL — Catania.",
   },
 
   {
@@ -279,9 +279,9 @@ export const serviceAreas: ServiceArea[] = [
       },
     ],
     percorsiCollegati: ["trasforma"],
-    metaTitle: "AI e automazione aziendale per PMI italiane | GIRO SRL",
+    metaTitle: "Intelligenza Artificiale per Aziende | AI & Automazione | GI.R.O.",
     metaDescription:
-      "Chat AI integrate in dashboard, OCR per analisi documenti, automazione processi. Proof of concept in 2-3 settimane, da €1.500. Privacy GDPR-first.",
+      "Integriamo AI nelle aziende: chatbot, OCR, analisi dati, automazione processi. Soluzioni concrete con privacy garantita. GI.R.O. SRL — Catania.",
   },
 
   {
@@ -372,9 +372,9 @@ export const serviceAreas: ServiceArea[] = [
       },
     ],
     percorsiCollegati: ["parti", "cresci"],
-    metaTitle: "Brand identity e logo per PMI | GIRO SRL Catania",
+    metaTitle: "Brand Identity e Logo Design per PMI | GI.R.O. SRL Catania",
     metaDescription:
-      "Logo, brandbook, materiali stampa e digitali. Rete di designer selezionati, un solo coordinatore. Identità che cresce nel tempo — non si improvvisa.",
+      "Creiamo identità visive che crescono nel tempo: logo, palette, tipografia, brandbook. GI.R.O. SRL — web agency Catania.",
   },
 
   {
@@ -465,9 +465,9 @@ export const serviceAreas: ServiceArea[] = [
       },
     ],
     percorsiCollegati: ["cresci"],
-    metaTitle: "Marketing digitale, Meta Ads e Google Ads per PMI | GIRO SRL",
+    metaTitle: "Marketing Digitale, Meta Ads e Google Ads | GI.R.O. SRL",
     metaDescription:
-      "Gestione Meta Ads e Google Ads, produzione contenuti foto/video, dashboard performance live. 8+ anni con Ford Virauto Catania. Da €30/giorno budget ads.",
+      "Gestione campagne Meta Ads, Google Ads, contenuti foto e video, funnel completo. Marketing misurabile per PMI italiane. GI.R.O. SRL — Catania.",
   },
 ]
 

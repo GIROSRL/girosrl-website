@@ -18,6 +18,10 @@ import {
 } from "@/components/ui/accordion"
 import { serviceAreas, getAreaBySlug } from "@/content/services"
 import { paths } from "@/content/paths"
+import {
+  JsonLdService,
+  JsonLdBreadcrumb,
+} from "@/components/common/json-ld"
 
 export function generateStaticParams() {
   return serviceAreas.map((a) => ({ slug: a.slug }))
@@ -57,26 +61,20 @@ export default async function ServizioDettaglioPage({
     area.percorsiCollegati.includes(p.slug as never)
   )
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: area.title,
-    description: area.description,
-    provider: {
-      "@type": "Organization",
-      name: "GI.R.O. SRL",
-      url: "https://girosrl.com",
-    },
-    areaServed: "IT",
-    serviceType: area.tagline,
-    url: `https://girosrl.com${area.href}`,
-  }
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <JsonLdService
+        name={area.title}
+        description={area.description}
+        serviceType={area.tagline}
+        path={area.href}
+      />
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Servizi", path: "/servizi" },
+          { name: area.title, path: area.href },
+        ]}
       />
       <main className="flex flex-col">
         <AuroraBackground accent={area.color} />

@@ -10,16 +10,31 @@ import { AnimatedHeadline } from "@/components/common/animated-headline"
 import { AuroraBackground } from "@/components/common/aurora-background"
 import { paths } from "@/content/paths"
 import { getAreaBySlug } from "@/content/services"
+import { JsonLdBreadcrumb } from "@/components/common/json-ld"
 
 export const metadata: Metadata = {
-  title: "Percorsi — Tre porte d'ingresso",
+  title: "Percorsi Digitali per PMI — Parti, Cresci, Trasforma | GI.R.O.",
   description:
-    "Parti, Cresci, Trasforma. Tre percorsi integrati che combinano le nostre aree di servizio per rispondere al momento di vita della tua azienda.",
+    "Tre percorsi su misura per la tua fase di crescita: lancia la presenza digitale, ottimizza le performance o trasforma l'intera operatività.",
+  alternates: { canonical: "/percorsi" },
+  openGraph: {
+    title: "Percorsi Digitali per PMI — Parti, Cresci, Trasforma | GI.R.O.",
+    description:
+      "Tre percorsi su misura per la tua fase di crescita. Lancio, growth o trasformazione completa.",
+    url: "/percorsi",
+    type: "website",
+  },
 }
 
 export default function PercorsiHubPage() {
   return (
     <main className="flex flex-col">
+      <JsonLdBreadcrumb
+        items={[
+          { name: "Home", path: "/" },
+          { name: "Percorsi", path: "/percorsi" },
+        ]}
+      />
       <AuroraBackground accent="#3a8fe8" />
       <Section size="lg">
         <Container>
