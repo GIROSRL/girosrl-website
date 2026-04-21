@@ -3,20 +3,19 @@
 import { useState } from "react"
 
 /**
+ * Default URL del Programma appuntamenti GI.R.O SRL (Google Calendar).
+ * Lun-Ven 09-13 e 16-20 (slot 30 min), auto Google Meet link.
+ * L'URL e\u0300 intenzionalmente pubblico (e\u0300 la pagina di booking condivisibile).
+ */
+const DEFAULT_CALENDAR_URL = "https://calendar.app.google/E1ySGmv5GCrXXm6H9"
+
+/**
  * Embed Google Calendar Appointment Scheduling.
- *
- * Setup (founder):
- * 1. Google Calendar → impostazioni → Programmi appuntamenti → crea pagina
- * 2. Copia l'URL pubblico (es. https://calendar.app.google/XXXXXXX)
- * 3. Su Vercel: Project → Settings → Environment Variables
- *    aggiungi `NEXT_PUBLIC_GOOGLE_CALENDAR_URL` = <URL>
- * 4. Redeploy
- *
- * Se la variabile non e\u0300 settata: il componente non renderizza nulla
- * (il form di contatto sotto rimane l'alternativa).
+ * Override possibile via env var `NEXT_PUBLIC_GOOGLE_CALENDAR_URL` (utile se
+ * un domani si cambia pagina senza toccare il codice).
  */
 export function CalendarBooking() {
-  const url = process.env["NEXT_PUBLIC_GOOGLE_CALENDAR_URL"]
+  const url = process.env["NEXT_PUBLIC_GOOGLE_CALENDAR_URL"] || DEFAULT_CALENDAR_URL
   const [expanded, setExpanded] = useState(false)
 
   if (!url) return null
