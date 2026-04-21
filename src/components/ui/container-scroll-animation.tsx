@@ -19,13 +19,6 @@ const FALLBACKS: Record<string, string> = {
   sicilery: "/images/projects/sicilery-preview.jpg",
 }
 
-// NB: thum.io aveva problemi (cookie banner, loading indicator, dimensioni non-ottimizzate,
-// captures blocchi). Ora usiamo SVG mockup locali (tall 3600px per simulare scroll interno).
-// Quando si avranno screenshot puliti reali, sostituire i file in /public/images/projects/.
-const _screenshotOf = (url: string) =>
-  `https://image.thum.io/get/width/1440/wait/5/noanimate/fullpage/${url}`
-void _screenshotOf
-
 export type ClientTab = {
   id: string
   label: string
@@ -93,7 +86,7 @@ export function ContainerScroll({
         v < 0.357 ? 0
         : v < 0.714 ? 1
         : 2
-      setActiveTab((prev) => {
+      setActiveTab(() => {
         // reset manual override when auto catches up
         if (manualTab !== null && auto === manualTab) setManualTab(null)
         return manualTab !== null ? manualTab : auto
@@ -225,7 +218,6 @@ function SitePreview({ tab, active, motionProgress, tabIndex }: SitePreviewProps
     // Each tab covers 1/3 of the total progress range
     const TAB_WIDTH = 1 / 3
     const tabStart = tabIndex * TAB_WIDTH
-    const tabEnd = tabStart + TAB_WIDTH
 
     const unsub = motionProgress.on("change", (v) => {
       if (!imgRef.current) return
@@ -242,6 +234,10 @@ function SitePreview({ tab, active, motionProgress, tabIndex }: SitePreviewProps
       className="absolute inset-0 transition-opacity duration-300"
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
     >
+      {/* Usiamo <img> (non next/image) perche\u0300 l'immagine ha height:160% e viene
+          scrollata via translateY dinamico — next/image con fill complica il layout
+          senza benefici reali (lazy-loaded, non nel critical path LCP). */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imgRef}
         src={imgSrc}

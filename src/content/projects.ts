@@ -11,7 +11,7 @@ export type Project = {
   /** Area di servizio a cui il progetto appartiene */
   areaSlug: AreaSlug
   url?: string
-  /** Immagine preview (URL esterno thum.io o path locale /public) */
+  /** Immagine preview (path locale /public/images/projects/*) */
   image?: string
   tags: string[]
   /** Colore accent della card (hex) */
@@ -19,10 +19,10 @@ export type Project = {
 }
 
 /**
- * Screenshot preview dinamico via thum.io (gratis, cachato lato servizio).
+ * Screenshot preview REALI — catturati una-tantum via Playwright.
+ * Path in /public/images/projects/. Re-cattura con:
+ *   node scripts/capture-previews.mjs
  */
-const screenshotOf = (url: string) =>
-  `https://image.thum.io/get/width/1440/noanimate/fullpage/${url}`
 
 export const projects: Project[] = [
   // ── SVILUPPO ───────────────────────────────────────────────
@@ -34,7 +34,7 @@ export const projects: Project[] = [
     tagline: "Sito + CRM + dashboard gestionale prenotazioni",
     areaSlug: "sviluppo",
     url: "https://siciliaclassica.it",
-    image: screenshotOf("https://siciliaclassica.it"),
+    image: "/images/projects/siciliaclassica-preview.jpg",
     tags: ["E-commerce", "Dashboard", "Email automation"],
     accent: "#14d6b4",
   },
@@ -46,7 +46,7 @@ export const projects: Project[] = [
     tagline: "Sito istituzionale + brand identity digitale",
     areaSlug: "sviluppo",
     url: "https://southunconventional.com",
-    image: screenshotOf("https://southunconventional.com"),
+    image: "/images/projects/south-unconventional-preview.jpg",
     tags: ["Sito istituzionale", "Brand digitale"],
     accent: "#14d6b4",
   },
@@ -58,7 +58,7 @@ export const projects: Project[] = [
     tagline: "Brand identity + sito + packaging per prodotti siciliani",
     areaSlug: "sviluppo",
     url: "https://www.sicilery.com",
-    image: screenshotOf("https://www.sicilery.com"),
+    image: "/images/projects/sicilery-preview.jpg",
     tags: ["Brand", "Sito web", "Packaging"],
     accent: "#14d6b4",
   },

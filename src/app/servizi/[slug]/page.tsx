@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/accordion"
 import { serviceAreas, getAreaBySlug } from "@/content/services"
 import { paths } from "@/content/paths"
-import type { AreaSlug } from "@/types/content"
 
 export function generateStaticParams() {
   return serviceAreas.map((a) => ({ slug: a.slug }))
@@ -376,5 +375,3 @@ export default async function ServizioDettaglioPage({
   )
 }
 
-// TypeScript helper: ristringe percorsiCollegati al type union
-type _CheckAreaSlug = AreaSlug

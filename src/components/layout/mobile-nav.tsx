@@ -17,6 +17,11 @@ export function MobileNav({ items }: MobileNavProps) {
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
+  // Pattern SSR-safe per createPortal: mount flag che diventa true dopo
+  // l'hydration client. L'ESLint rule (no-set-state-in-effect) sconsiglia
+  // setState sincrono in useEffect ma qui e\u0300 il pattern corretto per
+  // evitare hydration mismatch col Portal su document.body.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), [])
 
   useEffect(() => {

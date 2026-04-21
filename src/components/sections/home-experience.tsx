@@ -192,6 +192,9 @@ export function HomeExperience() {
     }, section)
 
     return () => ctx.revert()
+    // sviluppoMotionProgress e\u0300 un MotionValue stabile (identita\u0300 costante) — non
+    // deve triggerare ri-esecuzione dell'effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDesktop, reducedMotion])
 
   /**
