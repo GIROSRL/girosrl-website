@@ -8,8 +8,10 @@ import { JsonLdOrganization, JsonLdWebSite } from "@/components/common/json-ld"
 import { ScrollRestorationReset } from "@/components/common/scroll-restoration-reset"
 import "./globals.css"
 
+// Vercel redirige girosrl.com → www.girosrl.com (307). Host canonico e\u0300 il www
+// per allineare canonical/sitemap/JSON-LD con quello che Google trova dopo il redirect.
 const SITE_URL =
-  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://girosrl.com"
+  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://www.girosrl.com"
 
 export const metadata: Metadata = {
   title: {

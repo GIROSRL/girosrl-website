@@ -13,7 +13,7 @@
  */
 
 const BASE_URL =
-  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://girosrl.com"
+  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://www.girosrl.com"
 
 function Script({ data }: { data: Record<string, unknown> }) {
   return (

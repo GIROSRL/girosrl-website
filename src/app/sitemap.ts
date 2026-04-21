@@ -3,7 +3,7 @@ import { serviceAreas } from "@/content/services"
 import { paths as servicePaths } from "@/content/paths"
 
 const BASE_URL =
-  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://girosrl.com"
+  process.env["NEXT_PUBLIC_SITE_URL"] ?? "https://www.girosrl.com"
 
 /**
  * Sitemap dinamica — Next.js App Router la serve come /sitemap.xml.
