@@ -43,7 +43,7 @@ export function CalendarBooking() {
 
   return (
     <div className="rounded-2xl border border-[var(--color-navy-light)] bg-[var(--color-navy-mid)]/40 overflow-hidden">
-      <div className="px-6 py-5 flex items-center justify-between gap-4 flex-wrap">
+      <div className="px-5 md:px-6 py-5 flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-4">
         <div className="min-w-0">
           <div className="text-xs tracking-widest uppercase text-[var(--color-blue)] font-semibold mb-1">
             Prenota direttamente
@@ -55,11 +55,12 @@ export function CalendarBooking() {
             Scegli uno slot dal calendario · link Google Meet incluso automaticamente.
           </div>
         </div>
-        <div className="flex gap-2">
+        {/* Su mobile: stack verticale, full width, touch target 44px; su desktop: inline */}
+        <div className="flex flex-col sm:flex-row gap-2 shrink-0">
           <button
             type="button"
             onClick={openPopup}
-            className="px-4 py-2 rounded-lg text-sm font-semibold bg-[var(--color-blue)] text-white hover:brightness-110 transition inline-flex items-center gap-2"
+            className="px-5 py-3 rounded-lg text-sm font-semibold bg-[var(--color-blue)] text-white hover:brightness-110 transition inline-flex items-center justify-center gap-2 min-h-[44px]"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
               <rect x="3" y="5" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="1.8" />
@@ -71,7 +72,7 @@ export function CalendarBooking() {
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-2 rounded-lg text-sm font-semibold border border-[var(--color-navy-light)] hover:border-[var(--color-blue-dark)] transition"
+            className="px-5 py-3 rounded-lg text-sm font-semibold border border-[var(--color-navy-light)] hover:border-[var(--color-blue-dark)] transition inline-flex items-center justify-center min-h-[44px]"
           >
             Apri in nuova tab →
           </a>

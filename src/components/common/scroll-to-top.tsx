@@ -36,7 +36,8 @@ export function ScrollToTop({ threshold = 1 }: { threshold?: number }) {
       onClick={handleClick}
       aria-label="Torna in cima alla pagina"
       className={cn(
-        "fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full",
+        // bottom-[max(1.25rem,env(safe-area-inset-bottom))] evita collisione col notch iPhone
+        "fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 w-12 h-12 rounded-full",
         "flex items-center justify-center",
         "bg-[var(--color-blue)] text-white",
         "shadow-[0_10px_30px_-8px_rgba(58,143,232,0.55)]",

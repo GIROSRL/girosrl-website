@@ -18,11 +18,11 @@ export function CtaFinal() {
       {/* Orbital ring ricomposizione */}
       <div
         aria-hidden
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
       >
         <motion.svg
           viewBox="-200 -200 400 400"
-          className="w-[700px] h-[700px] max-w-full"
+          className="w-[90vw] max-w-[700px] aspect-square"
           initial={{ opacity: 0, scale: 0.8 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -115,7 +115,9 @@ export function CtaFinal() {
       </div>
 
       <Container>
-        <div className="relative z-10 text-center py-20 md:py-28">
+        {/* Niente py-X qui: lo gestisce gia\u0300 <Section size="lg">. Doppia
+            padding causava ~400px wasted space su mobile. */}
+        <div className="relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -125,7 +127,7 @@ export function CtaFinal() {
             <p className="text-xs tracking-[0.35em] uppercase text-[var(--color-blue)] mb-6">
               Pronto a iniziare?
             </p>
-            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight max-w-4xl mx-auto">
+            <h2 className="font-display text-[2.25rem] sm:text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] md:leading-[1.1] tracking-tight max-w-4xl mx-auto break-words">
               Un solo partner.{" "}
               <em className="not-italic text-[var(--color-blue)]">
                 Infinite direzioni.

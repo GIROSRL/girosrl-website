@@ -559,23 +559,23 @@ function HomeExperienceFallback() {
   return (
     <>
       {/* Hero statico semplificato */}
-      <section className="relative py-24 overflow-hidden" style={{ backgroundColor: "#080d1a" }}>
+      <section className="relative py-16 md:py-24 overflow-hidden" style={{ backgroundColor: "#080d1a" }}>
         <Container>
           <div className="text-center">
-            <p className="text-[11px] tracking-[0.4em] uppercase text-[var(--color-blue-light)] mb-5">
+            <p className="text-[10px] sm:text-[11px] tracking-[0.4em] uppercase text-[var(--color-blue-light)] mb-5">
               Consulenza digitale · Catania
             </p>
-            <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-8 max-w-3xl mx-auto">
+            <h1 className="font-display text-[2rem] sm:text-4xl md:text-6xl font-bold leading-[1.05] tracking-tight mb-6 md:mb-8 max-w-3xl mx-auto break-words">
               Un solo partner.{" "}
               <em className="not-italic" style={{ color: "var(--color-blue)" }}>
                 Infinite direzioni.
               </em>
             </h1>
-            <p className="max-w-xl mx-auto text-base text-[var(--color-gray-mid)] leading-relaxed mb-8">
+            <p className="max-w-xl mx-auto text-sm md:text-base text-[var(--color-gray-mid)] leading-relaxed mb-8">
               Al centro del tuo progetto, in ogni fase. Strategia, sviluppo e AI per
               la trasformazione digitale delle PMI italiane.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <GiroButton variant="primary" size="lg" href="/contatti">
                 Prenota una call
               </GiroButton>
@@ -588,19 +588,19 @@ function HomeExperienceFallback() {
       </section>
 
       {/* Manifesto statico */}
-      <section className="py-20" style={{ backgroundColor: "#0d1424" }}>
+      <section className="py-14 md:py-20" style={{ backgroundColor: "#0d1424" }}>
         <Container>
           <div className="text-center max-w-2xl mx-auto">
-            <p className="text-[11px] tracking-[0.4em] uppercase mb-6" style={{ color: "#ffb57a" }}>
+            <p className="text-[10px] sm:text-[11px] tracking-[0.4em] uppercase mb-5" style={{ color: "#ffb57a" }}>
               Il nostro manifesto
             </p>
-            <h2 className="font-display text-3xl md:text-5xl font-bold leading-[1.1] mb-5">
+            <h2 className="font-display text-[1.75rem] sm:text-3xl md:text-5xl font-bold leading-[1.1] mb-5 break-words">
               Al centro del tuo progetto,{" "}
               <em className="not-italic" style={{ color: "#ffb57a" }}>
                 in ogni fase.
               </em>
             </h2>
-            <p className="text-base leading-relaxed text-[var(--color-gray-mid)]">
+            <p className="text-sm md:text-base leading-relaxed text-[var(--color-gray-mid)]">
               Dal 2018 affianchiamo PMI italiane nella trasformazione digitale.
               Una relazione di fiducia, non un fornitore.
             </p>

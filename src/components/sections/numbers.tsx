@@ -88,15 +88,15 @@ function NumberCard({ stat, delay }: { stat: Stat; delay: number }) {
       />
 
       <div className="relative">
-        <div className="font-display text-5xl md:text-6xl lg:text-7xl font-bold leading-none">
+        <div className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-none break-words">
           <span ref={valueRef} style={{ color: "var(--color-blue)" }}>
             {stat.value}
           </span>
           <span className="text-[var(--color-blue-light)]">{stat.suffix}</span>
         </div>
-        <div className="mt-4 text-sm font-semibold tracking-wide">{stat.label}</div>
+        <div className="mt-3 md:mt-4 text-xs sm:text-sm font-semibold tracking-wide">{stat.label}</div>
         {stat.sublabel && (
-          <div className="mt-1 text-[10px] tracking-widest uppercase text-[var(--color-gray-mid)]">
+          <div className="mt-1 text-[9px] sm:text-[10px] tracking-widest uppercase text-[var(--color-gray-mid)]">
             {stat.sublabel}
           </div>
         )}

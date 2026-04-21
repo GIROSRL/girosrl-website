@@ -43,11 +43,15 @@ export function AnimatedHeadline({
 
   const style: React.CSSProperties = {
     fontFamily: "var(--font-display), 'Helvetica Neue', Arial, sans-serif",
-    fontSize: `clamp(2.5rem, ${Math.max(4, fontSize / 14)}vw + 1.5rem, ${fontSize}px)`,
+    // Cap inferiore 2rem (32px) per device stretti (es. iPhone SE 375px)
+    // Mantiene leggibilita\u0300 su titoli lunghi senza troncamento orizzontale
+    fontSize: `clamp(2rem, ${Math.max(4, fontSize / 14)}vw + 1rem, ${fontSize}px)`,
     fontWeight,
-    lineHeight: 1.02,
+    lineHeight: 1.05,
     letterSpacing: "-0.035em", // Inter Tight display: tracking molto stretto
     color: color ?? "var(--fg)",
+    overflowWrap: "break-word",
+    wordBreak: "break-word",
   }
 
   // Whitespace text node (nbsp) dentro ogni span tranne l'ultimo:
