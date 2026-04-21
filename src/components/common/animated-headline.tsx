@@ -42,11 +42,11 @@ export function AnimatedHeadline({
   const Tag = tag
 
   const style: React.CSSProperties = {
-    fontFamily: "var(--font-display), Georgia, serif",
+    fontFamily: "var(--font-display), 'Helvetica Neue', Arial, sans-serif",
     fontSize: `clamp(2.5rem, ${Math.max(4, fontSize / 14)}vw + 1.5rem, ${fontSize}px)`,
     fontWeight,
-    lineHeight: 1.04,
-    letterSpacing: "-0.02em",
+    lineHeight: 1.02,
+    letterSpacing: "-0.035em", // Inter Tight display: tracking molto stretto
     color: color ?? "var(--fg)",
   }
 

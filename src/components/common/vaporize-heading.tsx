@@ -55,7 +55,7 @@ export function VaporizeHeading({
       <VaporizeTextCycle
         texts={texts}
         font={{
-          fontFamily: "Playfair Display, Georgia, serif",
+          fontFamily: "Inter Tight, 'Helvetica Neue', Arial, sans-serif",
           fontSize: `${fontSize}px`,
           fontWeight,
         }}

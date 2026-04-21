@@ -163,10 +163,10 @@ body::after {
 /* ─── Typography ─────────────────────────────────────────────────── */
 
 h1, h2 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-display), 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: -0.03em; /* Inter Tight bold → tracking negativo per densita\u0300 display */
 }
 
 h3, h4, h5, h6 {

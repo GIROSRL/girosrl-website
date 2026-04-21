@@ -87,7 +87,7 @@ function ServiceCard({ area }: { area: ServiceArea }) {
       <div className="relative flex items-center gap-2 mb-3">
         <h3
           className="text-xl md:text-2xl leading-tight"
-          style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 700 }}
+          style={{ fontFamily: "var(--font-display), 'Helvetica Neue', Arial, sans-serif", fontWeight: 700, letterSpacing: "-0.02em" }}
         >
           {area.title}
         </h3>

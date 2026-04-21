@@ -88,12 +88,12 @@ export default function DesignSystemPage() {
           <DSSection title="Tipografia">
             <div className="space-y-10 p-8 rounded-xl bg-[var(--color-navy-mid)] border border-[var(--color-navy-light)]">
               <div>
-                <Caption className="mb-3">Display — Playfair Display 700 · H1</Caption>
+                <Caption className="mb-3">Display — Inter Tight 800 · H1</Caption>
                 <DisplayHeading>Un solo partner. Infinite direzioni.</DisplayHeading>
               </div>
               <Separator className="bg-[var(--color-navy-light)]" />
               <div>
-                <Caption className="mb-3">Heading 2 — Playfair Display 700</Caption>
+                <Caption className="mb-3">Heading 2 — Inter Tight 700</Caption>
                 <Heading2>La trasformazione digitale inizia qui.</Heading2>
               </div>
               <Separator className="bg-[var(--color-navy-light)]" />

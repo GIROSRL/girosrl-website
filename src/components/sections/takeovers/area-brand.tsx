@@ -107,10 +107,10 @@ export function AreaBrand() {
               Aa
             </div>
             <div className="text-[10px] tracking-widest uppercase text-white/60 mt-2 font-mono">
-              Playfair Display · Inter
+              Inter Tight · Inter
             </div>
             <div className="text-xs text-white/80 mt-2">
-              Editoriale + UI pulita
+              Display + UI pulita
             </div>
           </motion.div>
 
