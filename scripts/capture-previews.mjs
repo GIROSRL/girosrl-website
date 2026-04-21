@@ -12,6 +12,24 @@ const OUT_DIR = path.join(__dirname, "..", "public", "images", "projects")
 
 const SITES = [
   {
+    slug: "helme-instagram",
+    url: "https://www.instagram.com/helmestore/",
+    // Instagram ha un modal di login che appare dopo ~2-3s; dismissalo
+    cookieSelectors: [
+      'button:has-text("Only allow essential cookies")',
+      'button:has-text("Consenti solo cookie essenziali")',
+      'button:has-text("Decline optional cookies")',
+      'button:has-text("Rifiuta cookie opzionali")',
+      'button[aria-label*="Close" i]',
+      'svg[aria-label="Chiudi"]',
+      'svg[aria-label="Close"]',
+    ],
+    waitExtra: 3500,
+    // Clip al grid dei post (primi 6 post visibili) invece del fullpage
+    clipHeight: 1200,
+    clipOffsetY: 400,
+  },
+  {
     slug: "siciliaclassica",
     url: "https://siciliaclassica.it",
     // Iubenda / Cookiebot / custom: clicca il primo bottone "Accetta" trovato
@@ -114,14 +132,55 @@ async function main() {
     try {
       // load è piu' affidabile di networkidle — molti siti tengono connessioni aperte
       await page.goto(site.url, { waitUntil: "load", timeout: 45000 })
-      await page.waitForTimeout(2500)
+      await page.waitForTimeout(site.waitExtra ?? 2500)
 
       const dismissed = await dismissCookies(page, site.cookieSelectors)
       console.log(`  cookie dismissed: ${dismissed}`)
 
+      // Per Instagram: il modal login copre il grid. Prova a dismissare con Escape,
+      // poi hide via CSS aggressivo di TUTTI i dialog/presentation.
+      if (site.url.includes("instagram.com")) {
+        await page.keyboard.press("Escape").catch(() => {})
+        await page.waitForTimeout(300)
+        await page.addStyleTag({
+          content: `
+            [role="dialog"], [role="presentation"]:has([role="dialog"]),
+            div[data-visualcompletion="loading-state"] {
+              display: none !important;
+              visibility: hidden !important;
+              opacity: 0 !important;
+              pointer-events: none !important;
+            }
+            html, body {
+              overflow: auto !important;
+              position: static !important;
+              height: auto !important;
+            }
+          `,
+        })
+        // Rimuovi anche qualsiasi overlay position: fixed che dima i post (backdrop)
+        await page.evaluate(() => {
+          const mainRect = document.querySelector("main")?.getBoundingClientRect()
+          document.querySelectorAll("*").forEach((el) => {
+            const style = getComputedStyle(el)
+            if (style.position === "fixed" || style.position === "sticky") {
+              // Salva solo la main nav/header, rimuovi il resto (modal, backdrop, popup cookie)
+              if (!(mainRect && el.contains(document.querySelector("main")))) {
+                ;(el).style.display = "none"
+              }
+            }
+          })
+          // Rimuovi eventuale filter/brightness su body/main che potrebbe dimare
+          document.body.style.filter = "none"
+          const main = document.querySelector("main")
+          if (main) main.style.filter = "none"
+        })
+        await page.waitForTimeout(800)
+      }
+
       // Wait for fonts/images to settle
       await page.waitForTimeout(2500)
-      // Scroll to bottom and back to top to trigger lazy-load
+      // Scroll un po' per triggerare lazy-load delle immagini della griglia
       await page.evaluate(async () => {
         await new Promise((resolve) => {
           const step = window.innerHeight / 2
@@ -141,12 +200,24 @@ async function main() {
       await page.waitForTimeout(1500)
 
       const outPath = path.join(OUT_DIR, `${site.slug}-preview.jpg`)
-      await page.screenshot({
-        path: outPath,
-        fullPage: true,
-        type: "jpeg",
-        quality: 82,
-      })
+
+      // Clip option: cattura solo una regione (utile per grid Instagram)
+      if (site.clipHeight) {
+        const offsetY = site.clipOffsetY ?? 0
+        await page.screenshot({
+          path: outPath,
+          type: "jpeg",
+          quality: 82,
+          clip: { x: 0, y: offsetY, width: 1440, height: site.clipHeight },
+        })
+      } else {
+        await page.screenshot({
+          path: outPath,
+          fullPage: true,
+          type: "jpeg",
+          quality: 82,
+        })
+      }
       console.log(`  ✓ salvato: ${outPath}`)
     } catch (err) {
       console.error(`  ✗ errore su ${site.slug}:`, err.message)

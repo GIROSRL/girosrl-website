@@ -123,21 +123,12 @@ function CampaignDashboard() {
 }
 
 /**
- * Helmè Instagram feed mock — profilo + grid editoriale.
- * Il cliente Helmè e\u0300 un store luxury lifestyle per cui GIRO gestisce
- * contenuti editoriali e social management. Questo pannello mostra il
- * risultato "live": profilo con stats + 2x3 grid di post editoriali.
+ * Helmè Instagram feed — profilo + grid 2x3 dei post REALI di @helmestore.
+ * Lo screenshot del feed reale viene catturato da scripts/capture-previews.mjs
+ * (Playwright), salvato in /images/projects/helme-instagram-preview.jpg.
+ * Per aggiornare: `node scripts/capture-previews.mjs`.
  */
 function HelmeInstagramFeed() {
-  // 6 post mock con gradient/aesthetic "luxury moody": ogni tile ha un accento
-  const posts = [
-    { bg: "linear-gradient(135deg, #1a0d08 0%, #3a2014 100%)", label: "AW24", sub: "Capsule" },
-    { bg: "linear-gradient(135deg, #c8a070 0%, #8a6040 100%)", label: "Editorial", sub: "" },
-    { bg: "linear-gradient(135deg, #2a1a0f 0%, #4a3020 100%)", label: "Mood", sub: "" },
-    { bg: "linear-gradient(135deg, #8a6040 0%, #3a2014 100%)", label: "Lookbook", sub: "" },
-    { bg: "linear-gradient(135deg, #4a2a18 0%, #c8a070 100%)", label: "Drop 03", sub: "Sold out" },
-    { bg: "linear-gradient(135deg, #1a0d08 0%, #c8832a 100%)", label: "Preview", sub: "New" },
-  ]
   return (
     <div
       className="rounded-lg overflow-hidden border flex flex-col"
@@ -162,13 +153,16 @@ function HelmeInstagramFeed() {
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-[10px] font-semibold text-white truncate">
-            @helme.store
+            @helmestore
           </div>
           <div className="text-[7px] text-white/50 truncate">
-            Luxury lifestyle · Catania
+            HELMÈ · Luxury lifestyle
           </div>
         </div>
-        <div className="px-1.5 py-0.5 rounded text-[7px] font-bold text-white" style={{ background: "#fbbf24", color: "#0d1424" }}>
+        <div
+          className="px-1.5 py-0.5 rounded text-[7px] font-bold"
+          style={{ background: "#fbbf24", color: "#0d1424" }}
+        >
           SEGUI
         </div>
       </div>
@@ -177,47 +171,34 @@ function HelmeInstagramFeed() {
       <div className="grid grid-cols-3 text-center border-b border-white/10 py-1.5">
         <div>
           <div className="text-[9px] font-bold text-white leading-none">58</div>
-          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">Post</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
+            Post
+          </div>
         </div>
         <div>
           <div className="text-[9px] font-bold text-white leading-none">1.2k</div>
-          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">Follower</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
+            Follower
+          </div>
         </div>
         <div>
           <div className="text-[9px] font-bold text-white leading-none">+18%</div>
-          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">30d</div>
+          <div className="text-[6px] uppercase tracking-wider text-white/40 mt-0.5">
+            30d
+          </div>
         </div>
       </div>
 
-      {/* Grid 2x3 di post */}
-      <div className="grid grid-cols-3 gap-px bg-white/5 flex-1">
-        {posts.map((post, i) => (
-          <div
-            key={i}
-            className="aspect-square relative overflow-hidden flex items-end p-1"
-            style={{ background: post.bg }}
-          >
-            <div className="relative">
-              <div
-                className="font-display font-bold leading-none text-white"
-                style={{
-                  fontSize: "8px",
-                  textShadow: "0 1px 2px rgba(0,0,0,0.6)",
-                }}
-              >
-                {post.label}
-              </div>
-              {post.sub && (
-                <div
-                  className="text-[6px] uppercase tracking-widest text-white/80 mt-0.5"
-                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.6)" }}
-                >
-                  {post.sub}
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
+      {/* Grid 2x3 dei post REALI — screenshot dal feed @helmestore */}
+      <div className="flex-1 overflow-hidden bg-black">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/projects/helme-instagram-preview.jpg"
+          alt="Feed Instagram @helmestore — post editoriali luxury lifestyle"
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
+          draggable={false}
+        />
       </div>
 
       {/* Footer: engagement rate */}
@@ -226,7 +207,9 @@ function HelmeInstagramFeed() {
           Engagement
         </span>
         <span className="ml-auto text-[8px] font-bold text-white">6.2%</span>
-        <span className="text-[7px] font-semibold" style={{ color: "#34d399" }}>+2.1pt</span>
+        <span className="text-[7px] font-semibold" style={{ color: "#34d399" }}>
+          +2.1pt
+        </span>
       </div>
     </div>
   )
