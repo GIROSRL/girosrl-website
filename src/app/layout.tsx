@@ -5,6 +5,7 @@ import { LenisProvider } from "@/providers/lenis-provider"
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
 import { JsonLdOrganization } from "@/components/common/json-ld"
+import { ScrollRestorationReset } from "@/components/common/scroll-restoration-reset"
 import "./globals.css"
 
 const SITE_URL =
@@ -99,6 +100,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <JsonLdOrganization />
+        <ScrollRestorationReset />
         <LenisProvider>
           <Header />
           <div className="flex-1 flex flex-col pt-20 md:pt-24">{children}</div>

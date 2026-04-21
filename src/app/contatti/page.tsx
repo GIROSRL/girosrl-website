@@ -5,6 +5,7 @@ import { Label, BodyLarge } from "@/components/common/typography"
 import { BreadcrumbNav } from "@/components/common/breadcrumb-nav"
 import { AnimatedHeadline } from "@/components/common/animated-headline"
 import { AuroraBackground } from "@/components/common/aurora-background"
+import { CalendarBooking } from "@/components/common/calendar-booking"
 import { ContactForm } from "./contact-form"
 
 export const metadata: Metadata = {
@@ -44,6 +45,13 @@ export default function ContattiPage() {
               Compila il form qui sotto o scrivici direttamente. Rispondiamo
               entro 24 ore lavorative — parliamo con te, non con un bot.
             </BodyLarge>
+          </Container>
+        </Section>
+
+        {/* Prenota call via Google Calendar — opzionale (env NEXT_PUBLIC_GOOGLE_CALENDAR_URL) */}
+        <Section size="sm" className="pt-0">
+          <Container>
+            <CalendarBooking />
           </Container>
         </Section>
 
