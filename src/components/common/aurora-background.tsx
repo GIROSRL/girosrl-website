@@ -68,7 +68,7 @@ export function AuroraBackground({
         }}
       />
 
-      {/* Blob 1 — dominante, alto-sinistra */}
+      {/* Blob 1 — dominante, alto-sinistra. Blur ridotto per perf. */}
       <div
         className={cn(
           "absolute -inset-[20%]",
@@ -76,9 +76,10 @@ export function AuroraBackground({
         )}
         style={{
           backgroundImage: `radial-gradient(60% 50% at 25% 30%, ${strong} 0%, ${accent}00 60%)`,
-          filter: "blur(60px)",
+          filter: "blur(40px)",
           mixBlendMode: "screen",
           opacity: 0.95,
+          transform: "translateZ(0)", // forza GPU layer
         }}
       />
 
@@ -90,9 +91,10 @@ export function AuroraBackground({
         )}
         style={{
           backgroundImage: `radial-gradient(55% 45% at 75% 75%, ${strongSec} 0%, ${sec}00 60%)`,
-          filter: "blur(80px)",
+          filter: "blur(50px)",
           mixBlendMode: "screen",
           opacity: 0.85,
+          transform: "translateZ(0)",
         }}
       />
 
@@ -104,9 +106,10 @@ export function AuroraBackground({
         )}
         style={{
           backgroundImage: `radial-gradient(50% 40% at 50% 95%, ${mid} 0%, ${accent}00 65%)`,
-          filter: "blur(100px)",
+          filter: "blur(60px)",
           mixBlendMode: "screen",
           opacity: 0.75,
+          transform: "translateZ(0)",
         }}
       />
 
@@ -150,35 +153,27 @@ export function AuroraBackground({
       />
 
       <style>{`
+        /* Solo translate (GPU-composited, zero layout thrash). Scale rimosso. */
         @keyframes aurora-shift-1 {
-          0%   { transform: translate3d(0%, 0%, 0) scale(1); }
-          33%  { transform: translate3d(6%, 4%, 0) scale(1.08); }
-          66%  { transform: translate3d(-4%, 8%, 0) scale(0.96); }
-          100% { transform: translate3d(0%, 0%, 0) scale(1); }
+          0%   { transform: translate3d(0%, 0%, 0); }
+          33%  { transform: translate3d(6%, 4%, 0); }
+          66%  { transform: translate3d(-4%, 8%, 0); }
+          100% { transform: translate3d(0%, 0%, 0); }
         }
         @keyframes aurora-shift-2 {
-          0%   { transform: translate3d(0%, 0%, 0) scale(1); }
-          50%  { transform: translate3d(-8%, -6%, 0) scale(1.12); }
-          100% { transform: translate3d(0%, 0%, 0) scale(1); }
+          0%   { transform: translate3d(0%, 0%, 0); }
+          50%  { transform: translate3d(-8%, -6%, 0); }
+          100% { transform: translate3d(0%, 0%, 0); }
         }
         @keyframes aurora-shift-3 {
-          0%   { transform: translate3d(0%, 0%, 0) scale(1); }
-          40%  { transform: translate3d(10%, -4%, 0) scale(0.92); }
-          80%  { transform: translate3d(-6%, 6%, 0) scale(1.05); }
-          100% { transform: translate3d(0%, 0%, 0) scale(1); }
+          0%   { transform: translate3d(0%, 0%, 0); }
+          40%  { transform: translate3d(10%, -4%, 0); }
+          80%  { transform: translate3d(-6%, 6%, 0); }
+          100% { transform: translate3d(0%, 0%, 0); }
         }
-        .aurora-blob-1 {
-          animation: aurora-shift-1 26s ease-in-out infinite;
-          will-change: transform;
-        }
-        .aurora-blob-2 {
-          animation: aurora-shift-2 34s ease-in-out infinite;
-          will-change: transform;
-        }
-        .aurora-blob-3 {
-          animation: aurora-shift-3 42s ease-in-out infinite;
-          will-change: transform;
-        }
+        .aurora-blob-1 { animation: aurora-shift-1 26s ease-in-out infinite; }
+        .aurora-blob-2 { animation: aurora-shift-2 34s ease-in-out infinite; }
+        .aurora-blob-3 { animation: aurora-shift-3 42s ease-in-out infinite; }
         @media (prefers-reduced-motion: reduce) {
           .aurora-blob-1, .aurora-blob-2, .aurora-blob-3 { animation: none; }
         }

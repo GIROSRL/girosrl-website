@@ -1,58 +1,19 @@
 "use client"
 
-import React, { useEffect, type ReactNode, type CSSProperties } from "react"
+import React, { useEffect, useRef, type ReactNode, type CSSProperties } from "react"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { cn } from "@/lib/utils"
 
 /**
- * SINGLE global pointermove listener condiviso da TUTTE le GlowCard.
- * Scrive --x/--y/--xp/--yp su document.documentElement: tutte le card
- * (che usano background-attachment: fixed) ereditano gli stessi valori.
- * Prima: N card = N listener + N style writes per frame. Ora: 1 listener + 1 write.
+ * Perf-first: la card attiva SOLO quando il cursore ci passa sopra.
+ * - Listener aggiunto on mouseenter, rimosso on mouseleave
+ * - Nessun `background-attachment: fixed` (che forzava repaint viewport-wide
+ *   su tutte le card ad ogni frame)
+ * - Coordinate relative alla card, non al viewport
+ *
+ * Risultato: 5 GlowCard idle = 0 listener attivi + 0 paint. Hovered card =
+ * 1 listener + 1 paint a frame (solo sul proprio rect).
  */
-let globalGlowListenerInstalled = false
-let globalGlowRefCount = 0
-let globalCleanup: (() => void) | null = null
-
-function ensureGlobalGlowListener() {
-  if (typeof window === "undefined") return
-  if (globalGlowListenerInstalled) {
-    globalGlowRefCount++
-    return
-  }
-  globalGlowListenerInstalled = true
-  globalGlowRefCount = 1
-
-  const root = document.documentElement
-  let rafId = 0
-  let pending: PointerEvent | null = null
-  const apply = () => {
-    rafId = 0
-    if (!pending) return
-    const e = pending
-    pending = null
-    root.style.setProperty("--glow-x", e.clientX.toFixed(2))
-    root.style.setProperty("--glow-xp", (e.clientX / window.innerWidth).toFixed(3))
-    root.style.setProperty("--glow-y", e.clientY.toFixed(2))
-    root.style.setProperty("--glow-yp", (e.clientY / window.innerHeight).toFixed(3))
-  }
-  const sync = (e: PointerEvent) => {
-    pending = e
-    if (!rafId) rafId = requestAnimationFrame(apply)
-  }
-  document.addEventListener("pointermove", sync, { passive: true })
-  globalCleanup = () => {
-    document.removeEventListener("pointermove", sync)
-    if (rafId) cancelAnimationFrame(rafId)
-    globalGlowListenerInstalled = false
-    globalCleanup = null
-  }
-}
-
-function releaseGlobalGlowListener() {
-  globalGlowRefCount = Math.max(0, globalGlowRefCount - 1)
-  if (globalGlowRefCount === 0 && globalCleanup) globalCleanup()
-}
 
 type GlowColorPreset = "blue" | "purple" | "green" | "red" | "orange"
 
@@ -117,12 +78,60 @@ export function GlowCard({
   style,
 }: GlowCardProps) {
   const prefersReducedMotion = useReducedMotion()
+  const cardRef = useRef<HTMLDivElement>(null)
 
-  // Single shared listener — tutte le card leggono --glow-x/--glow-y dal root.
+  // Listener hover-gated: attivo solo quando il cursore sta sopra la card.
+  // Scrive coords LOCALI (relative alla card) — niente repaint su altre card.
   useEffect(() => {
     if (prefersReducedMotion) return
-    ensureGlobalGlowListener()
-    return () => releaseGlobalGlowListener()
+    const el = cardRef.current
+    if (!el) return
+
+    let rafId = 0
+    let pending: PointerEvent | null = null
+
+    const apply = () => {
+      rafId = 0
+      if (!pending || !cardRef.current) return
+      const e = pending
+      pending = null
+      const rect = cardRef.current.getBoundingClientRect()
+      const lx = e.clientX - rect.left
+      const ly = e.clientY - rect.top
+      cardRef.current.style.setProperty("--glow-x", lx.toFixed(2))
+      cardRef.current.style.setProperty("--glow-y", ly.toFixed(2))
+      cardRef.current.style.setProperty(
+        "--glow-xp",
+        (lx / Math.max(1, rect.width)).toFixed(3)
+      )
+    }
+    const onMove = (e: PointerEvent) => {
+      pending = e
+      if (!rafId) rafId = requestAnimationFrame(apply)
+    }
+    const onEnter = () => {
+      el.style.setProperty("--bg-spot-opacity", "0.12")
+      el.style.setProperty("--border-spot-opacity", "1")
+      el.style.setProperty("--border-light-opacity", "0.85")
+      el.addEventListener("pointermove", onMove, { passive: true })
+    }
+    const onLeave = () => {
+      el.removeEventListener("pointermove", onMove)
+      el.style.setProperty("--bg-spot-opacity", "0")
+      el.style.setProperty("--border-spot-opacity", "0")
+      el.style.setProperty("--border-light-opacity", "0")
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = 0
+    }
+
+    el.addEventListener("pointerenter", onEnter)
+    el.addEventListener("pointerleave", onLeave)
+    return () => {
+      el.removeEventListener("pointerenter", onEnter)
+      el.removeEventListener("pointerleave", onLeave)
+      el.removeEventListener("pointermove", onMove)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [prefersReducedMotion])
 
   const preset = glowColorMap[glowColor]
@@ -147,15 +156,19 @@ export function GlowCard({
     "--border-size": "calc(var(--border, 1.5) * 1px)",
     "--spotlight-size": "calc(var(--size, 220) * 1px)",
     "--hue": "calc(var(--base) + (var(--glow-xp, 0) * var(--spread, 0)))",
-    backgroundImage: `radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--glow-x, 0) * 1px) calc(var(--glow-y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 90) * 1%) calc(var(--lightness, 62) * 1%) / var(--bg-spot-opacity, 0.12)), transparent)`,
-    backgroundSize:
-      "calc(100% + (2 * var(--border-size))) calc(100% + (2 * var(--border-size)))",
-    backgroundPosition: "50% 50%",
-    backgroundAttachment: "fixed",
+    // opacity iniziale 0 (invisibile). hover listener la porta a 0.12 (vedi onEnter sopra).
+    "--bg-spot-opacity": "0",
+    "--border-spot-opacity": "0",
+    "--border-light-opacity": "0",
+    backgroundImage: `radial-gradient(var(--spotlight-size) var(--spotlight-size) at calc(var(--glow-x, 0) * 1px) calc(var(--glow-y, 0) * 1px), hsl(var(--hue, 210) calc(var(--saturation, 90) * 1%) calc(var(--lightness, 62) * 1%) / var(--bg-spot-opacity, 0)), transparent)`,
+    backgroundSize: "100% 100%",
+    backgroundPosition: "0 0",
+    // background-attachment: fixed rimosso — gradient relativo alla card
     border: "var(--border-size) solid var(--backup-border)",
     borderRadius: "calc(var(--radius) * 1px)",
     position: "relative",
     touchAction: "auto",
+    transition: "--bg-spot-opacity 0.2s ease, --border-spot-opacity 0.2s ease",
     ...(width !== undefined
       ? { width: typeof width === "number" ? `${width}px` : width }
       : {}),
@@ -166,6 +179,7 @@ export function GlowCard({
 
   return (
     <div
+      ref={cardRef}
       data-giro-glow
       style={inlineStyles as CSSProperties}
       className={cn(sizeClass, aspect, "relative", className)}
