@@ -9,11 +9,11 @@ import { Container } from "@/components/common/container"
 import { GiroButton } from "@/components/common/giro-button"
 import { Magnetic } from "@/components/common/magnetic"
 import { ProjectPreviewCard } from "@/components/common/project-preview-card"
+import { HelmeInstagramFeed } from "@/components/common/helme-instagram-feed"
 import { serviceAreas } from "@/content/services"
 import { projects } from "@/content/projects"
 import { useReducedMotion } from "@/hooks/use-reduced-motion"
 import { AreaTakeover } from "./takeovers"
-import { ContainerScroll } from "@/components/ui/container-scroll-animation"
 
 const HomeExperienceScene = dynamic(
   () =>
@@ -643,15 +643,22 @@ function HomeExperienceFallback() {
                   <p className="text-sm leading-relaxed text-[var(--color-gray-mid)] mb-4">
                     {area.description}
                   </p>
-                  {area.slug === "sviluppo" ? (
-                    <ContainerScroll />
-                  ) : areaProjects.length > 0 ? (
+                  {/* Marketing: anteprima Helme\u0300 IG feed (stesso mock del desktop
+                      takeover, scalato in-card) + project cards sotto.
+                      Sviluppo: solo project cards (ContainerScroll rimosso da
+                      mobile perche\u0301 troppo alto — device frame inutile senza pin). */}
+                  {area.slug === "marketing" && (
+                    <div className="mt-4 mb-4 max-w-[340px] mx-auto">
+                      <HelmeInstagramFeed />
+                    </div>
+                  )}
+                  {areaProjects.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                       {areaProjects.map((p) => (
                         <ProjectPreviewCard key={p.id} project={p} />
                       ))}
                     </div>
-                  ) : null}
+                  )}
                 </div>
               )
             })}
