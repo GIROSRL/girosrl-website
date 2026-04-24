@@ -17,7 +17,10 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const instance = new Lenis({
-      duration: 1.2,
+      // Perf: duration 0.9 (era 1.2) e wheelMultiplier 1.1 \u2192 lo scroll segue
+      // piu\u0300 fedelmente l'input utente, meno "peso" inerziale percepito.
+      duration: 0.9,
+      wheelMultiplier: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })

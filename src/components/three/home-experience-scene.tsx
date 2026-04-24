@@ -18,6 +18,8 @@ export type HomeExperienceRefs = {
   coreZoomRef: React.RefObject<{ value: number }>
   mouseX: React.RefObject<{ value: number }>
   mouseY: React.RefObject<{ value: number }>
+  /** Se false, il Canvas smette di renderizzare frame (perf off-screen). */
+  active?: boolean
 }
 
 /**
@@ -30,11 +32,22 @@ export type HomeExperienceRefs = {
  * Nessun rimount — la Canvas vive per tutta la durata del pin (~1000vh scroll).
  */
 export function HomeExperienceScene(props: HomeExperienceRefs) {
+  const { active = true } = props
   return (
     <Canvas
-      dpr={[1, 1.75]}
+      // Perf: dpr cap 1.5 (era 1.75) \u2014 su display 2x/3x rendera a 1.5x
+      // invece che a 2x, risparmiando ~30% pixel da shader.
+      dpr={[1, 1.5]}
       camera={{ position: [0, 0, 8], fov: 42, near: 0.1, far: 100 }}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      gl={{
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance",
+        stencil: false,
+      }}
+      // Perf: frameloop "never" quando la sezione e\u0300 fuori viewport \u2192 CPU/GPU
+      // completamente liberate. Ritorna "always" quando si rientra.
+      frameloop={active ? "always" : "never"}
       style={{ background: "transparent" }}
     >
       <ambientLight intensity={0.3} />

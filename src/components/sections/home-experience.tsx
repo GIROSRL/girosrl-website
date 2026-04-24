@@ -65,6 +65,10 @@ export function HomeExperience() {
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null)
   const sviluppoMotionProgress = useMotionValue(0)
   const lenis = useLenis()
+  // Perf: scene attiva solo quando la sezione e\u0300 (parzialmente) in viewport.
+  // Quando l'utente ha superato 1000vh del pin e sta su altre sezioni, il
+  // Canvas smette di renderizzare (frameloop: "never") \u2192 zero costo GPU/CPU.
+  const [sceneActive, setSceneActive] = useState(true)
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 1024)
@@ -81,6 +85,18 @@ export function HomeExperience() {
     }
     window.addEventListener("mousemove", handle, { passive: true })
     return () => window.removeEventListener("mousemove", handle)
+  }, [isDesktop])
+
+  // Perf: IntersectionObserver \u2192 attiva/disattiva frameloop Canvas
+  useEffect(() => {
+    if (!isDesktop || !sectionRef.current) return
+    const el = sectionRef.current
+    const io = new IntersectionObserver(
+      ([entry]) => setSceneActive((entry?.isIntersecting ?? true)),
+      { rootMargin: "100px" } // piccolo buffer: avvia il Canvas 100px prima dell'ingresso
+    )
+    io.observe(el)
+    return () => io.disconnect()
   }, [isDesktop])
 
   useEffect(() => {
@@ -128,8 +144,12 @@ export function HomeExperience() {
           id: "home-exp",
           trigger: section,
           start: "top top",
-          end: "+=900%",
-          scrub: 1.1,
+          // Perf: 600% (era 900%) \u2014 sezione pinned piu\u0300 breve,
+          // meno scroll totale da attraversare, stessi 10 snap point 0-1.
+          end: "+=600%",
+          // Perf: scrub 0.5 (era 1.1) \u2014 dimezzato il lag tra scroll e
+          // animazione canvas/content, feel molto piu\u0300 snappy.
+          scrub: 0.5,
           pin: pin,
           pinType: "transform",
           anticipatePin: 1,
@@ -254,19 +274,18 @@ export function HomeExperience() {
 
       isAnimating = true
       lenis.scrollTo(targetScroll, {
-        // Transizione volutamente LENTA: l'utente percepisce un passaggio deliberato.
-        // Durante i 1.8s isAnimating blocca ulteriori wheel → serve riscrollare dopo.
-        duration: 1.8,
-        // easeInOutCubic — graduale, non scattante
-        easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
+        // Transizione snappy: 0.8s con ease forte \u2192 passo deciso, non "lento"
+        duration: 0.8,
+        // easeOutQuart \u2014 decelera rapidamente, feel piu\u0300 reattivo
+        easing: (t: number) => 1 - Math.pow(1 - t, 4),
         lock: true,
         force: true,
         onComplete: () => {
-          // Cooldown di 250ms — non accetta altri wheel immediatamente dopo lo snap:
-          // cosi' un gesto di trackpad con inertia residua non salta un secondo step.
+          // Cooldown 120ms (era 250) \u2014 basta a smaltire inertia trackpad
+          // ma non rallenta l'utente che vuole navigare piu\u0300 step consecutivi.
           setTimeout(() => {
             isAnimating = false
-          }, 250)
+          }, 120)
         },
       })
     }
@@ -276,13 +295,10 @@ export function HomeExperience() {
       observer = Observer.create({
         target: window,
         type: "wheel,touch",
-        // Tolerance 25 = serve un wheel/swipe "deciso" per contare come step.
-        // Cosi' il tap piano / coda di inertia del trackpad non fa scattare uno step.
-        tolerance: 25,
-        dragMinimum: 40,
+        // Tolerance 20 \u2014 sensibile al wheel ma non troppo (filtra micro-jitter)
+        tolerance: 20,
+        dragMinimum: 35,
         preventDefault: true,
-        // onDown = utente scrolla in giu' (wheel forward / swipe up) → avanti
-        // onUp = utente scrolla in su (wheel back / swipe down) → indietro
         onDown: () => advance(1),
         onUp: () => advance(-1),
       })
@@ -330,6 +346,7 @@ export function HomeExperience() {
             coreZoomRef={coreZoomRef}
             mouseX={mouseX}
             mouseY={mouseY}
+            active={sceneActive}
           />
         </div>
 
