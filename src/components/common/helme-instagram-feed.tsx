@@ -5,7 +5,7 @@ import { helmeInstagram } from "@/content/helme-instagram"
  * Usato sia nel takeover Marketing desktop (dentro CampaignDashboard) sia
  * nel fallback mobile home-experience. Lo screenshot del feed reale viene
  * catturato da scripts/capture-previews.mjs (Playwright), salvato in
- * /images/projects/helme-instagram-preview.jpg. Per aggiornare:
+ * /images/projects/helme-instagram-preview.webp. Per aggiornare:
  *   `node scripts/capture-previews.mjs`
  */
 export function HelmeInstagramFeed() {
@@ -84,7 +84,7 @@ export function HelmeInstagramFeed() {
       <div className="flex-1 overflow-hidden bg-black">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/images/projects/helme-instagram-preview.jpg"
+          src="/images/projects/helme-instagram-preview.webp"
           alt="Feed Instagram @helmestore — post editoriali luxury lifestyle"
           className="w-full h-full object-cover object-top"
           loading="lazy"

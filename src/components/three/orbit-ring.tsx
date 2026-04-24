@@ -37,9 +37,11 @@ export function OrbitRing({
 
   const geometry = useMemo(() => {
     const curve = new THREE.EllipseCurve(0, 0, radius, radius, 0, Math.PI * 2, false, 0)
-    const points = curve.getPoints(128).map((p) => new THREE.Vector3(p.x, 0, p.y))
+    // Perf: 64 curve points + 128 tube segments (down da 128/256) \u2014 orbit visivamente
+    // liscio a raggi 2.2-3.6, vertici dimezzati senza perdita qualita\u0300 percepita.
+    const points = curve.getPoints(64).map((p) => new THREE.Vector3(p.x, 0, p.y))
     const path = new THREE.CatmullRomCurve3(points, true)
-    return new THREE.TubeGeometry(path, 256, thickness, 8, true)
+    return new THREE.TubeGeometry(path, 128, thickness, 6, true)
   }, [radius, thickness])
 
   useEffect(() => {

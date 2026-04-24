@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react"
 import {
   useScroll,
   useTransform,
+  useMotionValue,
   motion,
   type MotionValue,
 } from "framer-motion"
@@ -14,9 +15,9 @@ import { cn } from "@/lib/utils"
 // Screenshot reali catturati via scripts/capture-previews.mjs (Playwright)
 // Re-run per aggiornare: `node scripts/capture-previews.mjs`
 const FALLBACKS: Record<string, string> = {
-  siciliaclassica: "/images/projects/siciliaclassica-preview.jpg",
-  "south-unconventional": "/images/projects/south-unconventional-preview.jpg",
-  sicilery: "/images/projects/sicilery-preview.jpg",
+  siciliaclassica: "/images/projects/siciliaclassica-preview.webp",
+  "south-unconventional": "/images/projects/south-unconventional-preview.webp",
+  sicilery: "/images/projects/sicilery-preview.webp",
 }
 
 export type ClientTab = {
@@ -207,47 +208,39 @@ type SitePreviewProps = {
 }
 
 function SitePreview({ tab, active, motionProgress, tabIndex }: SitePreviewProps) {
-  const imgRef = useRef<HTMLImageElement>(null)
   // Usiamo sempre il mockup SVG locale — rapido, zero dipendenze esterne, nessun cookie banner
   const [imgSrc] = useState(tab.fallback)
 
-  // Scroll the image based on sub-phase progress for this tab
-  React.useEffect(() => {
-    if (!motionProgress || !imgRef.current) return
-
-    // Each tab covers 1/3 of the total progress range
-    const TAB_WIDTH = 1 / 3
-    const tabStart = tabIndex * TAB_WIDTH
-
-    const unsub = motionProgress.on("change", (v) => {
-      if (!imgRef.current) return
-      // local progress within this tab's slice (0→1)
-      const local = Math.max(0, Math.min(1, (v - tabStart) / TAB_WIDTH))
-      // Translate image up by up to 60% of its own height
-      imgRef.current.style.transform = `translateY(-${local * 60}%)`
-    })
-    return unsub
-  }, [motionProgress, tabIndex])
+  // Perf: useTransform (GPU-accelerated, nessun style recalc CPU-bound)
+  // invece di motionProgress.on("change") + imperative style.transform writes.
+  // Framer Motion computa il value ogni frame direttamente nel composito.
+  const TAB_WIDTH = 1 / 3
+  const tabStart = tabIndex * TAB_WIDTH
+  const fallbackMV = useMotionValue(0)
+  const translateYPercent = useTransform(
+    motionProgress ?? fallbackMV,
+    [tabStart, tabStart + TAB_WIDTH],
+    ["0%", "-60%"],
+    { clamp: true }
+  )
 
   return (
     <div
       className="absolute inset-0 transition-opacity duration-300"
       style={{ opacity: active ? 1 : 0, pointerEvents: active ? "auto" : "none" }}
     >
-      {/* Usiamo <img> (non next/image) perche\u0300 l'immagine ha height:160% e viene
-          scrollata via translateY dinamico — next/image con fill complica il layout
-          senza benefici reali (lazy-loaded, non nel critical path LCP). */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        ref={imgRef}
+      {/* Usiamo motion.img (non next/image) perche\u0300 l'immagine ha height:160%
+          e viene scrollata via translateY driven da MotionValue \u2014 Framer Motion
+          aggiorna la transform direttamente nel GPU layer. Nessun paint CPU. */}
+      <motion.img
         src={imgSrc}
         alt={tab.label}
         className="w-full object-cover object-top"
-        style={{
-          height: "160%", // taller than container so scroll has room
-          willChange: "transform",
-          transition: motionProgress ? undefined : "transform 0.3s ease",
-        }}
+        style={
+          motionProgress
+            ? { height: "160%", willChange: "transform", y: translateYPercent }
+            : { height: "160%", willChange: "transform", transition: "transform 0.3s ease" }
+        }
         loading="lazy"
         draggable={false}
       />

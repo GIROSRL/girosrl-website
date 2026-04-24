@@ -7,6 +7,7 @@ import { chromium } from "playwright"
 import path from "path"
 import fs from "fs/promises"
 import { fileURLToPath } from "url"
+import sharp from "sharp"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const OUT_DIR = path.join(__dirname, "..", "public", "images", "projects")
@@ -59,7 +60,11 @@ async function downloadAvatar(url, outPath) {
   })
   if (!res.ok) throw new Error(`avatar fetch ${res.status}`)
   const buf = Buffer.from(await res.arrayBuffer())
-  await fs.writeFile(outPath, buf)
+  // Resize + WebP encode (72x72 display, 2x retina → 144px max)
+  await sharp(buf)
+    .resize({ width: 144, height: 144, fit: "cover" })
+    .webp({ quality: 82 })
+    .toFile(outPath)
 }
 
 const SITES = [
@@ -197,9 +202,9 @@ async function main() {
           const meta = await extractInstagramMeta(page, handle)
           console.log(`  IG meta:`, meta)
 
-          // Scarica avatar
+          // Scarica avatar (WebP)
           if (meta.avatarUrl) {
-            const avatarPath = path.join(OUT_DIR, `${handle}-avatar.jpg`)
+            const avatarPath = path.join(OUT_DIR, `${handle}-avatar.webp`)
             await downloadAvatar(meta.avatarUrl, avatarPath)
             console.log(`  ✓ avatar salvato: ${avatarPath}`)
           }
@@ -213,7 +218,7 @@ async function main() {
 export const helmeInstagram = {
   handle: ${JSON.stringify(meta.handle)},
   displayName: ${JSON.stringify(meta.displayName || "HELMÈ")},
-  avatar: ${JSON.stringify(`/images/projects/${meta.handle}-avatar.jpg`)},
+  avatar: ${JSON.stringify(`/images/projects/${meta.handle}-avatar.webp`)},
   posts: ${JSON.stringify(meta.posts || "—")},
   followers: ${JSON.stringify(meta.followers || "—")},
   following: ${JSON.stringify(meta.following || "—")},
@@ -284,25 +289,17 @@ export const helmeInstagram = {
       })
       await page.waitForTimeout(1500)
 
-      const outPath = path.join(OUT_DIR, `${site.slug}-preview.jpg`)
+      // Screenshot → PNG in memoria → sharp webp (~50% piu\u0300 leggero di JPG)
+      const screenshotOpts = site.clipHeight
+        ? { type: "png", clip: { x: 0, y: site.clipOffsetY ?? 0, width: 1440, height: site.clipHeight } }
+        : { type: "png", fullPage: true }
+      const pngBuffer = await page.screenshot(screenshotOpts)
 
-      // Clip option: cattura solo una regione (utile per grid Instagram)
-      if (site.clipHeight) {
-        const offsetY = site.clipOffsetY ?? 0
-        await page.screenshot({
-          path: outPath,
-          type: "jpeg",
-          quality: 82,
-          clip: { x: 0, y: offsetY, width: 1440, height: site.clipHeight },
-        })
-      } else {
-        await page.screenshot({
-          path: outPath,
-          fullPage: true,
-          type: "jpeg",
-          quality: 82,
-        })
-      }
+      const outPath = path.join(OUT_DIR, `${site.slug}-preview.webp`)
+      await sharp(pngBuffer)
+        .resize({ width: 1440, withoutEnlargement: true })
+        .webp({ quality: 80, effort: 6 })
+        .toFile(outPath)
       console.log(`  ✓ salvato: ${outPath}`)
     } catch (err) {
       console.error(`  ✗ errore su ${site.slug}:`, err.message)

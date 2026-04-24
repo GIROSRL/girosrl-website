@@ -5,7 +5,7 @@
 export const helmeInstagram = {
   handle: "helmestore",
   displayName: "HELMÈ",
-  avatar: "/images/projects/helmestore-avatar.jpg",
+  avatar: "/images/projects/helmestore-avatar.webp",
   posts: "1,890",
   followers: "9,132",
   following: "549",

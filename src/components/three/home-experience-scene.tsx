@@ -41,7 +41,7 @@ export function HomeExperienceScene(props: HomeExperienceRefs) {
       <pointLight position={[6, 6, 6]} intensity={0.5} color="#ffffff" />
       <pointLight position={[-5, -3, -2]} intensity={0.4} color={sceneColors.core} />
 
-      <Starfield count={380} />
+      <Starfield count={240} />
 
       <OrbitRingsLayer {...props} />
       <CoreLayer {...props} />
@@ -58,7 +58,7 @@ export function HomeExperienceScene(props: HomeExperienceRefs) {
           luminanceThreshold={0.28}
           luminanceSmoothing={0.9}
           mipmapBlur
-          kernelSize={KernelSize.MEDIUM}
+          kernelSize={KernelSize.SMALL}
         />
       </EffectComposer>
     </Canvas>
@@ -214,7 +214,7 @@ function CoreLayer({ takeoverRef, coreZoomRef, activeIdxRef }: HomeExperienceRef
   return (
     <group ref={groupRef}>
       <mesh>
-        <sphereGeometry args={[0.38, 48, 48]} />
+        <sphereGeometry args={[0.38, 32, 32]} />
         <meshStandardMaterial
           ref={materialRef}
           color={sceneColors.core}
@@ -226,7 +226,7 @@ function CoreLayer({ takeoverRef, coreZoomRef, activeIdxRef }: HomeExperienceRef
         />
       </mesh>
       <mesh scale={1.4}>
-        <sphereGeometry args={[0.38, 24, 24]} />
+        <sphereGeometry args={[0.38, 16, 16]} />
         <meshBasicMaterial
           ref={glowInnerRef}
           color={sceneColors.coreGlow}
@@ -237,7 +237,7 @@ function CoreLayer({ takeoverRef, coreZoomRef, activeIdxRef }: HomeExperienceRef
         />
       </mesh>
       <mesh scale={2.1}>
-        <sphereGeometry args={[0.38, 24, 24]} />
+        <sphereGeometry args={[0.38, 16, 16]} />
         <meshBasicMaterial
           ref={glowOuterRef}
           color={sceneColors.coreGlow}
@@ -345,7 +345,7 @@ function HomePlanet({
     <group ref={tiltGroupRef} rotation={[config.tiltX, 0, config.tiltZ]}>
       <group ref={pivotRef}>
         <mesh ref={meshRef}>
-          <sphereGeometry args={[config.size, 32, 32]} />
+          <sphereGeometry args={[config.size, 24, 24]} />
           <meshStandardMaterial
             ref={materialRef}
             color={config.color}
@@ -357,7 +357,7 @@ function HomePlanet({
           />
         </mesh>
         <mesh scale={1.8}>
-          <sphereGeometry args={[config.size, 16, 16]} />
+          <sphereGeometry args={[config.size, 12, 12]} />
           <meshBasicMaterial
             ref={glowInner}
             color={config.color}
@@ -368,7 +368,7 @@ function HomePlanet({
           />
         </mesh>
         <mesh scale={2.8}>
-          <sphereGeometry args={[config.size, 16, 16]} />
+          <sphereGeometry args={[config.size, 12, 12]} />
           <meshBasicMaterial
             ref={glowOuter}
             color={config.color}

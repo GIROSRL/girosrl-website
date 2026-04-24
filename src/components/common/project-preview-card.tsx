@@ -27,12 +27,12 @@ export function ProjectPreviewCard({ project }: Props) {
     )
   }
 
-  // Screenshot reali (JPG, catturati via scripts/capture-previews.mjs) o
+  // Screenshot reali (WebP, catturati via scripts/capture-previews.mjs) o
   // fallback SVG locale quando il progetto non ha un dominio pubblico (es. Helmè, Virauto).
   const fallbackMap: Record<string, string> = {
-    siciliaclassica: "/images/projects/siciliaclassica-preview.jpg",
-    "south-unconventional": "/images/projects/south-unconventional-preview.jpg",
-    sicilery: "/images/projects/sicilery-preview.jpg",
+    siciliaclassica: "/images/projects/siciliaclassica-preview.webp",
+    "south-unconventional": "/images/projects/south-unconventional-preview.webp",
+    sicilery: "/images/projects/sicilery-preview.webp",
     helme: "/images/projects/helme-preview.svg",
     virauto: "/images/projects/virauto-preview.svg",
   }
